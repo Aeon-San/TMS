@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+body {
+    overflow: auto;
+    -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+    html {
+        font-size: 15px;
+    }
+
+    .mobile-scrollbar-none {
+        scrollbar-width: none;
+    }
+
+    .mobile-scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+}

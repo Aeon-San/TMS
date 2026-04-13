@@ -238,12 +238,14 @@ NODE_ENV=production
 CLOUDINARY_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+VITE_USE_HASH_ROUTER=false
 ```
 
 ### Vercel Notes
 - same project me frontend aur backend dono deploy honge
 - frontend production me relative `/api/...` routes use karega
 - Vercel config root me `vercel.json` file se manage ho rahi hai
+- reset-password aur deep links ke liye BrowserRouter use hota hai, isliye `VITE_USE_HASH_ROUTER=false` rakha gaya hai
 - backend serverless mode me run karega, isliye uploads ke liye temp files system temp directory me store hoti hain
 
 ## Current Route Flow

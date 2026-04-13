@@ -70,12 +70,12 @@ const PomodoroWidget = ({ darkMode, activeTaskName }) => {
           <h3 className={`text-xl font-bold ${titleText}`}>Pomodoro Focus</h3>
           <p className={`text-sm ${mutedText}`}>25 min focus, 5 min break to keep momentum high.</p>
         </div>
-        <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-sm text-slate-300" : "rounded-2xl bg-[#fff3f6] px-3 py-2 text-sm text-slate-600"}>
+        <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-sm text-slate-300" : "rounded-2xl bg-blue-50 px-3 py-2 text-sm text-blue-700"}>
           {sessionCount} sessions
         </div>
       </div>
 
-      <div className={darkMode ? "rounded-[24px] border border-white/8 bg-[#140f18] p-5" : "rounded-[24px] border border-[#f3d2db] bg-[#fff9fa] p-5"}>
+      <div className={darkMode ? "rounded-[24px] border border-white/8 bg-[#140f18] p-5" : "rounded-[24px] border border-slate-200 bg-slate-50 p-5"}>
         <div className="mb-3 flex items-center justify-between">
           <span className={`text-sm font-medium uppercase tracking-[0.24em] ${mutedText}`}>
             {mode === "focus" ? "Focus Session" : "Break Time"}
@@ -89,9 +89,9 @@ const PomodoroWidget = ({ darkMode, activeTaskName }) => {
           {formatTime(timeLeft)}
         </div>
 
-        <div className={darkMode ? "mb-5 h-3 rounded-full bg-white/8" : "mb-5 h-3 rounded-full bg-[#ffe2e9]"}>
+        <div className={darkMode ? "mb-5 h-3 rounded-full bg-white/8" : "mb-5 h-3 rounded-full bg-slate-200"}>
           <div
-            className="h-full rounded-full bg-[linear-gradient(90deg,#ffb7c4_0%,#ff7b86_100%)] transition-all duration-500"
+            className="h-full rounded-full bg-[linear-gradient(90deg,#93c5fd_0%,#2563eb_100%)] transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -100,14 +100,14 @@ const PomodoroWidget = ({ darkMode, activeTaskName }) => {
           <button
             type="button"
             onClick={() => setIsRunning((prev) => !prev)}
-            className="rounded-2xl bg-[#ff7b86] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(255,123,134,0.28)] transition hover:bg-[#ff6a77]"
+            className="rounded-2xl bg-[#2563eb] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(37,99,235,0.28)] transition hover:bg-[#1d4ed8]"
           >
             {isRunning ? "Pause" : "Start"}
           </button>
           <button
             type="button"
             onClick={resetTimer}
-            className={darkMode ? "rounded-2xl bg-white/8 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/12" : "rounded-2xl bg-[#fff3f6] px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-[#ffe4eb]"}
+            className={darkMode ? "rounded-2xl bg-white/8 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/12" : "rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200"}
           >
             Reset
           </button>
@@ -119,7 +119,7 @@ const PomodoroWidget = ({ darkMode, activeTaskName }) => {
               setIsRunning(false);
               setTimeLeft(nextMode === "focus" ? WORK_DURATION : BREAK_DURATION);
             }}
-            className={darkMode ? "rounded-2xl bg-white/8 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/12" : "rounded-2xl bg-[#fff3f6] px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-[#ffe4eb]"}
+            className={darkMode ? "rounded-2xl bg-white/8 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/12" : "rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200"}
           >
             Switch to {mode === "focus" ? "Break" : "Focus"}
           </button>

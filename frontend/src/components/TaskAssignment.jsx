@@ -65,7 +65,7 @@ const TaskAssignment = ({ task, board, onAssignmentChange, darkMode }) => {
 
   if (!board) {
     return (
-      <div className={darkMode ? "text-sm text-slate-400" : "text-sm text-gray-500"}>
+        <div className={darkMode ? "text-sm text-slate-400" : "text-sm text-slate-500"}>
         Task assignment requires a board context
       </div>
     );
@@ -77,7 +77,7 @@ const TaskAssignment = ({ task, board, onAssignmentChange, darkMode }) => {
         <span className={darkMode ? "text-sm font-medium text-slate-200" : "text-sm font-medium"}>Assigned to:</span>
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className={darkMode ? "btn btn-xs border-0 bg-white/8 text-slate-200 hover:bg-white/12" : "btn btn-ghost btn-xs"}
+          className={darkMode ? "btn btn-xs border-0 bg-white/8 text-slate-200 hover:bg-white/12" : "btn btn-ghost btn-xs text-slate-700 hover:bg-slate-100"}
           disabled={loading}
         >
           <FaUserPlus className="h-4 w-4" />
@@ -88,7 +88,7 @@ const TaskAssignment = ({ task, board, onAssignmentChange, darkMode }) => {
         {assignedUsers.map((user) => (
           <div
             key={user._id}
-            className={darkMode ? "flex items-center gap-1 rounded-full bg-[#2b2133] px-2 py-1 text-xs text-[#ffb5c4]" : "flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800"}
+            className={darkMode ? "flex items-center gap-1 rounded-full bg-[#1e293b] px-2 py-1 text-xs text-sky-200" : "flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs text-blue-700"}
           >
             <span>{user.name}</span>
             <button
@@ -106,7 +106,7 @@ const TaskAssignment = ({ task, board, onAssignmentChange, darkMode }) => {
       </div>
 
       {showDropdown && (
-        <div className={darkMode ? "absolute left-0 top-full z-50 mt-1 w-64 rounded-2xl border border-white/10 bg-[#15111a] shadow-[0_20px_60px_rgba(0,0,0,0.35)]" : "absolute left-0 top-full z-50 mt-1 w-64 rounded-lg border border-base-300 bg-base-100 shadow-lg"}>
+        <div className={darkMode ? "absolute left-0 top-full z-50 mt-1 w-64 rounded-2xl border border-white/10 bg-[#15111a] shadow-[0_20px_60px_rgba(0,0,0,0.35)]" : "absolute left-0 top-full z-50 mt-1 w-64 rounded-2xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)]"}>
           <div className="p-2">
             <div className="relative mb-2">
               <FaSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
@@ -132,7 +132,7 @@ const TaskAssignment = ({ task, board, onAssignmentChange, darkMode }) => {
                     className={darkMode ? "flex w-full items-center gap-2 rounded p-2 text-left hover:bg-white/8" : "flex w-full items-center gap-2 rounded p-2 text-left hover:bg-base-200"}
                     disabled={loading}
                   >
-                    <div className={darkMode ? "flex h-6 w-6 items-center justify-center rounded-full bg-[#ff7b86] text-xs text-white" : "flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-white"}>
+                    <div className={darkMode ? "flex h-6 w-6 items-center justify-center rounded-full bg-[#2563eb] text-xs text-white" : "flex h-6 w-6 items-center justify-center rounded-full bg-[#2563eb] text-xs text-white"}>
                       {member.user.name.charAt(0).toUpperCase()}
                     </div>
                     <div>

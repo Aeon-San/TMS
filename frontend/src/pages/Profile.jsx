@@ -36,7 +36,7 @@ const emptyPreferences = {
 const inputClass = (darkMode) =>
   darkMode
     ? 'w-full rounded-2xl border border-white/10 bg-[#1d1723] px-4 py-3 text-slate-100 outline-none'
-    : 'w-full rounded-2xl border border-[#f2c2cd] bg-[#fff8fa] px-4 py-3 text-slate-700 outline-none';
+    : 'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 outline-none';
 
 const cardClass = (darkMode) =>
   darkMode ? 'border border-white/8 bg-white/6' : 'border border-white/70 bg-white/90';
@@ -260,21 +260,21 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(180deg,#f8d9df_0%,#fff5f6_52%,#fbe7ec_100%)]">
-        <div className="rounded-[28px] bg-white/90 p-8 shadow-[0_24px_60px_rgba(163,82,104,0.16)]">
-          <LoaderCircle className="h-10 w-10 animate-spin text-[#d45d83]" />
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="rounded-[28px] border border-slate-200 bg-white p-8 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
+          <LoaderCircle className="h-10 w-10 animate-spin text-[#2563eb]" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen pb-8 ${darkMode ? 'bg-[radial-gradient(circle_at_top,#2d1e33_0%,#16121b_42%,#0c0a10_100%)] text-slate-100' : 'bg-[linear-gradient(180deg,#f8d9df_0%,#fff5f6_52%,#fbe7ec_100%)] text-slate-900'}`}>
+    <div className={`min-h-screen pb-8 ${darkMode ? 'bg-[radial-gradient(circle_at_top,#2d1e33_0%,#16121b_42%,#0c0a10_100%)] text-slate-100' : 'bg-white text-slate-900'}`}>
         <div className="mx-auto max-w-[1450px] px-3 py-4 sm:px-4 sm:py-6 lg:px-6">
-        <div className={`mb-4 rounded-[24px] p-4 shadow-[0_24px_60px_rgba(163,82,104,0.12)] sm:mb-6 sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-white/60 bg-white/78 backdrop-blur'}`}>
+        <div className={`mb-4 rounded-[24px] p-4 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:mb-6 sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-slate-200 bg-white'}`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-4">
-              <Link to="/dashboard" className={darkMode ? 'inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/8 text-slate-100 transition hover:bg-white/12' : 'inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff1f4] text-slate-700 transition hover:bg-[#ffe4ea]'}>
+              <Link to="/dashboard" className={darkMode ? 'inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/8 text-slate-100 transition hover:bg-white/12' : 'inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-slate-700 transition hover:bg-blue-100'}>
                 <ArrowLeft className="h-5 w-5" />
               </Link>
               <div>
@@ -288,17 +288,17 @@ const Profile = () => {
                 {darkMode ? <SunMedium className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
                 {darkMode ? 'Light Mode' : 'Dark Mode'}
               </button>
-              <button type="button" onClick={logout} className="btn rounded-2xl border-0 bg-[#ff7b86] text-white hover:bg-[#ff6977]">Logout</button>
+              <button type="button" onClick={logout} className="btn rounded-2xl border-0 bg-slate-900 text-white hover:bg-slate-800">Logout</button>
             </div>
           </div>
         </div>
 
         <div className="grid gap-4 sm:gap-6 xl:grid-cols-[0.92fr_1.08fr]">
-          <aside className={`rounded-[24px] p-4 shadow-[0_24px_60px_rgba(163,82,104,0.12)] sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-white/60 bg-white/78 backdrop-blur'}`}>
+          <aside className={`rounded-[24px] p-4 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-slate-200 bg-white'}`}>
             <div className="mb-6 flex flex-col items-center text-center">
               <div className="relative">
-                <img src={displayImage} alt="Profile" className="h-28 w-28 rounded-[28px] object-cover shadow-[0_18px_40px_rgba(212,93,131,0.24)]" />
-                <label htmlFor="avatar-upload" className="absolute -bottom-2 -right-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.3)] transition hover:scale-105">
+                <img src={displayImage} alt="Profile" className="h-28 w-28 rounded-[28px] object-cover shadow-[0_18px_40px_rgba(15,23,42,0.14)]" />
+                <label htmlFor="avatar-upload" className="absolute -bottom-2 -right-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)] transition hover:scale-105">
                   <Camera className="h-4 w-4" />
                   <input id="avatar-upload" type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                 </label>
@@ -310,7 +310,7 @@ const Profile = () => {
               </div>
               <h2 className="mt-5 text-2xl font-bold">{user?.name}</h2>
               <p className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>@{profileForm.username || 'username'}</p>
-              <div className={`mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ${darkMode ? 'bg-white/8 text-slate-200' : 'bg-[#fff0f4] text-slate-700'}`}>
+              <div className={`mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ${darkMode ? 'bg-white/8 text-slate-200' : 'bg-slate-100 text-slate-700'}`}>
                 <Mail className="h-4 w-4" />
                 {user?.email}
               </div>
@@ -324,7 +324,7 @@ const Profile = () => {
               ].map(({ label, value, icon: Icon }) => (
                 <div key={label} className={`rounded-[24px] p-4 ${cardClass(darkMode)}`}>
                   <div className="mb-3 flex items-center justify-between">
-                    <div className={darkMode ? 'rounded-2xl bg-[#ff7b86]/20 p-2 text-[#ff9bab]' : 'rounded-2xl bg-[#fff0f4] p-2 text-[#d45d83]'}>
+                    <div className={darkMode ? 'rounded-2xl bg-[#2563eb]/20 p-2 text-[#93c5fd]' : 'rounded-2xl bg-blue-50 p-2 text-[#2563eb]'}>
                       <Icon className="h-4 w-4" />
                     </div>
                     <span className={`text-xs uppercase tracking-[0.24em] ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>{label}</span>
@@ -336,18 +336,18 @@ const Profile = () => {
 
             <div className={`mt-6 rounded-[24px] p-5 ${cardClass(darkMode)}`}>
               <div className="mb-3 flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-[#ff7b86]" />
+                <Sparkles className="h-4 w-4 text-[#2563eb]" />
                 <h3 className="font-semibold">Productivity Insight</h3>
               </div>
               <p className={`text-sm leading-6 ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>{productivityInsight}</p>
-              <div className={`mt-4 h-2 rounded-full ${darkMode ? 'bg-white/8' : 'bg-[#ffe2e9]'}`}>
-                <div className="h-full rounded-full bg-[#ff7b86] transition-all duration-500" style={{ width: `${stats.completionRate}%` }} />
+              <div className={`mt-4 h-2 rounded-full ${darkMode ? 'bg-white/8' : 'bg-slate-200'}`}>
+                <div className="h-full rounded-full bg-[#2563eb] transition-all duration-500" style={{ width: `${stats.completionRate}%` }} />
               </div>
               <p className={`mt-2 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>{stats.completionRate}% completion rate</p>
             </div>
           </aside>
 
-          <main className={`rounded-[24px] p-4 shadow-[0_24px_60px_rgba(163,82,104,0.12)] sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-white/60 bg-white/78 backdrop-blur'}`}>
+          <main className={`rounded-[24px] p-4 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-slate-200 bg-white'}`}>
             <div className="mb-6 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
               {TABS.map((tab) => (
                 <button
@@ -356,10 +356,10 @@ const Profile = () => {
                   onClick={() => setActiveTab(tab)}
                   className={`shrink-0 rounded-2xl px-4 py-2 text-sm font-medium transition ${
                     activeTab === tab
-                      ? 'bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.3)]'
+                      ? 'bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]'
                       : darkMode
                         ? 'bg-white/8 text-slate-200 hover:bg-white/12'
-                        : 'bg-[#fff0f4] text-slate-700 hover:bg-[#ffe4ea]'
+                        : 'bg-slate-100 text-slate-700 hover:bg-blue-50'
                   }`}
                 >
                   {tab}
@@ -388,7 +388,7 @@ const Profile = () => {
                       <input name="email" type="email" value={profileForm.email} onChange={handleProfileInput} className={inputClass(darkMode)} />
                     </label>
                   </div>
-                  <button type="submit" disabled={submitting} className="mt-5 inline-flex items-center rounded-2xl bg-[#ff7b86] px-5 py-3 font-medium text-white transition hover:bg-[#ff6977] disabled:cursor-not-allowed disabled:opacity-70">
+                  <button type="submit" disabled={submitting} className="mt-5 inline-flex items-center rounded-2xl bg-[#2563eb] px-5 py-3 font-medium text-white transition hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-70">
                     <Save className="mr-2 h-4 w-4" />
                     Save Profile
                   </button>
@@ -397,7 +397,7 @@ const Profile = () => {
                 <div className="space-y-6">
                   <div className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
                     <div className="mb-5 flex items-center gap-2">
-                      <Shield className="h-5 w-5 text-[#ff7b86]" />
+                      <Shield className="h-5 w-5 text-[#2563eb]" />
                       <div>
                         <h3 className="text-xl font-bold">Security Snapshot</h3>
                         <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Keep your account protected with strong credentials.</p>
@@ -417,7 +417,7 @@ const Profile = () => {
 
                   <form onSubmit={handleChangePassword} className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
                     <div className="mb-5 flex items-center gap-2">
-                      <KeyRound className="h-5 w-5 text-[#ff7b86]" />
+                      <KeyRound className="h-5 w-5 text-[#2563eb]" />
                       <div>
                         <h3 className="text-xl font-bold">Change Password</h3>
                         <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Use a strong password with uppercase, lowercase, and numbers.</p>
@@ -462,10 +462,10 @@ const Profile = () => {
                               </div>
                               <span className={`rounded-full px-3 py-1 text-xs font-medium ${
                                 task.priority === 'High'
-                                  ? 'bg-[#ffd7de] text-[#b94969]'
+                                ? 'bg-sky-100 text-sky-700'
                                   : task.priority === 'Medium'
-                                    ? 'bg-[#ffe6c9] text-[#a16415]'
-                                    : 'bg-[#dbf4e7] text-[#24714d]'
+                                    ? 'bg-amber-100 text-amber-700'
+                                    : 'bg-slate-100 text-slate-700'
                               }`}>
                                 {task.priority}
                               </span>
@@ -485,7 +485,7 @@ const Profile = () => {
                         recentCompletedTasks.map((task) => (
                           <div key={task._id} className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
                             <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ff7b86] text-white">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2563eb] text-white">
                                 <CheckCircle2 className="h-5 w-5" />
                               </div>
                               <div>
@@ -510,8 +510,8 @@ const Profile = () => {
                       activityTimeline.map((entry, index) => (
                         <div key={`${entry.taskId}-${entry.createdAt}-${index}`} className="flex gap-4">
                           <div className="flex flex-col items-center">
-                            <div className="mt-1 h-3 w-3 rounded-full bg-[#ff7b86]" />
-                            {index !== activityTimeline.length - 1 ? <div className={`mt-2 h-full w-px ${darkMode ? 'bg-white/10' : 'bg-[#f2c6d0]'}`} /> : null}
+                            <div className="mt-1 h-3 w-3 rounded-full bg-[#2563eb]" />
+                            {index !== activityTimeline.length - 1 ? <div className={`mt-2 h-full w-px ${darkMode ? 'bg-white/10' : 'bg-slate-200'}`} /> : null}
                           </div>
                           <div className={`flex-1 rounded-2xl p-4 ${softCardClass(darkMode)}`}>
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -545,14 +545,14 @@ const Profile = () => {
                       { key: 'assignmentNotifications', label: 'Assignment Alerts', icon: Bell },
                       { key: 'productUpdates', label: 'Product Updates', icon: Sparkles },
                     ].map(({ key, label, icon: Icon }) => (
-                      <button key={key} type="button" onClick={() => handlePreferenceToggle(key)} className={`flex w-full items-center justify-between rounded-2xl p-4 text-left transition ${softCardClass(darkMode)} ${darkMode ? 'hover:bg-white/10' : 'hover:bg-[#fff0f4]'}`}>
+                      <button key={key} type="button" onClick={() => handlePreferenceToggle(key)} className={`flex w-full items-center justify-between rounded-2xl p-4 text-left transition ${softCardClass(darkMode)} ${darkMode ? 'hover:bg-white/10' : 'hover:bg-blue-50'}`}>
                         <div className="flex items-center gap-3">
                           <div className={darkMode ? 'rounded-2xl bg-white/8 p-2 text-slate-200' : 'rounded-2xl bg-white p-2 text-slate-700'}>
                             <Icon className="h-4 w-4" />
                           </div>
                           <span className="font-medium">{label}</span>
                         </div>
-                        <div className={`relative h-7 w-12 rounded-full transition ${preferences[key] ? 'bg-[#ff7b86]' : darkMode ? 'bg-white/10' : 'bg-[#f3d5dd]'}`}>
+                        <div className={`relative h-7 w-12 rounded-full transition ${preferences[key] ? 'bg-[#2563eb]' : darkMode ? 'bg-white/10' : 'bg-slate-200'}`}>
                           <span className={`absolute top-1 h-5 w-5 rounded-full bg-white transition ${preferences[key] ? 'left-6' : 'left-1'}`} />
                         </div>
                       </button>
@@ -566,14 +566,14 @@ const Profile = () => {
                     <div className="mt-5 grid gap-4 md:grid-cols-2">
                       <div className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
                         <div className="mb-2 flex items-center gap-2 font-semibold">
-                          <User className="h-4 w-4 text-[#ff7b86]" />
+                          <User className="h-4 w-4 text-[#2563eb]" />
                           Account Role
                         </div>
                         <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{user?.role || 'user'}</p>
                       </div>
                       <div className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
                         <div className="mb-2 flex items-center gap-2 font-semibold">
-                          <Shield className="h-4 w-4 text-[#ff7b86]" />
+                          <Shield className="h-4 w-4 text-[#2563eb]" />
                           Account Status
                         </div>
                         <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Protected with secure session cookies and password hashing</p>
@@ -581,10 +581,10 @@ const Profile = () => {
                     </div>
                   </div>
 
-                  <div className={`rounded-[28px] p-5 ${darkMode ? 'border border-[#5e2639] bg-[#2a1721]' : 'border border-[#ffd3dc] bg-[#fff1f4]'}`}>
-                    <h3 className="text-xl font-bold text-[#cf4568]">Danger Zone</h3>
-                    <p className="mt-2 max-w-xl text-sm text-[#9a4960]">Deleting your account is permanent and removes access to your personal workspace data.</p>
-                    <button type="button" onClick={handleDeleteAccount} className="mt-5 inline-flex items-center rounded-2xl bg-[#cf4568] px-5 py-3 font-medium text-white transition hover:bg-[#bb3859]">
+                  <div className={`rounded-[28px] p-5 ${darkMode ? 'border border-white/8 bg-white/6' : 'border border-slate-200 bg-slate-50'}`}>
+                    <h3 className="text-xl font-bold text-slate-900">Danger Zone</h3>
+                    <p className="mt-2 max-w-xl text-sm text-slate-600">Deleting your account is permanent and removes access to your personal workspace data.</p>
+                    <button type="button" onClick={handleDeleteAccount} className="mt-5 inline-flex items-center rounded-2xl bg-rose-600 px-5 py-3 font-medium text-white transition hover:bg-rose-700">
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete Account
                     </button>

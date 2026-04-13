@@ -47,7 +47,7 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
 
   const shellClass = darkMode
     ? "rounded-[28px] border border-white/8 bg-white/6 p-4 shadow-sm"
-    : "rounded-[28px] border border-[#f4d0d8] bg-[linear-gradient(180deg,#fff9fa_0%,#fff1f4_100%)] p-4 shadow-sm";
+    : "rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_12px_30px_rgba(15,23,42,0.05)]";
 
   return (
     <div className={shellClass}>
@@ -55,7 +55,7 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
         <h3 className={darkMode ? "text-lg font-semibold text-white" : "text-lg font-semibold text-slate-900"}>Boards</h3>
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
-          className="btn btn-sm rounded-2xl border-0 bg-[#ff7b86] text-white shadow-[0_10px_20px_rgba(255,123,134,0.28)] hover:bg-[#ff6a77]"
+        className="btn btn-sm rounded-2xl border-0 bg-[#2563eb] text-white shadow-[0_10px_20px_rgba(37,99,235,0.28)] hover:bg-[#1d4ed8]"
         >
           <FaPlus className="w-4 h-4" />
         </button>
@@ -68,24 +68,24 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
             placeholder="Board name"
             value={newBoardName}
             onChange={(e) => setNewBoardName(e.target.value)}
-            className={darkMode ? "input input-sm w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-100" : "input input-sm w-full rounded-2xl border border-[#f2c2cd] bg-white text-slate-700"}
+            className={darkMode ? "input input-sm w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-100" : "input input-sm w-full rounded-2xl border border-slate-200 bg-slate-50 text-slate-700"}
             required
           />
           <textarea
             placeholder="Description (optional)"
             value={newBoardDescription}
             onChange={(e) => setNewBoardDescription(e.target.value)}
-            className={darkMode ? "textarea textarea-sm w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-100" : "textarea textarea-sm w-full rounded-2xl border border-[#f2c2cd] bg-white text-slate-700"}
+            className={darkMode ? "textarea textarea-sm w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-100" : "textarea textarea-sm w-full rounded-2xl border border-slate-200 bg-slate-50 text-slate-700"}
             rows="2"
           />
           <div className="flex gap-2">
-            <button type="submit" className="btn btn-sm rounded-2xl border-0 bg-[#ff7b86] text-white hover:bg-[#ff6a77]">
+            <button type="submit" className="btn btn-sm rounded-2xl border-0 bg-[#2563eb] text-white hover:bg-[#1d4ed8]">
               Create
             </button>
             <button
               type="button"
               onClick={() => setShowCreateForm(false)}
-              className="btn btn-sm rounded-2xl border-0 bg-[#fff3f6] text-slate-700 hover:bg-[#ffe4eb]"
+              className="btn btn-sm rounded-2xl border-0 bg-slate-100 text-slate-700 hover:bg-slate-200"
             >
               Cancel
             </button>
@@ -98,12 +98,12 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
           onClick={() => onBoardSelect(null)}
           className={`w-full rounded-2xl border p-3 text-left transition ${
             !selectedBoard
-              ? 'border-[#ffb5c4] bg-[#ffe8ee] shadow-sm'
-              : 'border-transparent bg-white/80 hover:bg-white'
+              ? 'border-blue-200 bg-blue-50 shadow-sm'
+              : 'border-transparent bg-white hover:bg-slate-50'
           }`}
         >
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ff7b86] text-[11px] font-semibold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2563eb] text-[11px] font-semibold text-white">
               Home
             </div>
             <div>
@@ -124,12 +124,12 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
               onClick={() => onBoardSelect(board)}
               className={`w-full rounded-2xl border p-3 text-left transition ${
                 selectedBoard?._id === board._id
-                  ? 'border-[#ffb5c4] bg-[#ffe8ee] shadow-sm'
-                  : 'border-transparent bg-white/80 hover:bg-white'
+                  ? 'border-blue-200 bg-blue-50 shadow-sm'
+                  : 'border-transparent bg-white hover:bg-slate-50'
               }`}
             >
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ffd2dc] text-[11px] font-semibold text-[#b34869]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[11px] font-semibold text-[#2563eb]">
                   Board
                 </div>
                 <div className="flex-1">

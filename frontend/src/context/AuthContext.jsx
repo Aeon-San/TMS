@@ -4,6 +4,15 @@ import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
+const getApiErrorMessage = (error, fallback) => {
+    const details = error.response?.data?.details;
+    if (Array.isArray(details) && details.length > 0) {
+        return details[0]?.message || fallback;
+    }
+
+    return error.response?.data?.message || fallback;
+};
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -41,7 +50,7 @@ export const AuthProvider = ({ children }) => {
         await refreshUser();
         toast.success("Signup successful! Welcome");
         } catch (error) {
-        toast.error(error.response?.data?.message || "Signup failed!");
+        toast.error(getApiErrorMessage(error, "Signup failed!"));
         throw new Error("Invalid Credentials");
         }
 
@@ -54,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   
             toast.success("Login successful!");
         } catch (error) {
-            toast.error(error.response?.data?.message || "Invalid credentials!!!");
+            toast.error(getApiErrorMessage(error, "Invalid credentials!!!"));
             throw new Error("Invalid Credentials");
         }
     }, [refreshUser]);
@@ -66,7 +75,7 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             toast.success("Logged out successfully!");
         } catch (error) {
-            toast.error("Failed to logout!");
+            toast.error(getApiErrorMessage(error, "Failed to logout!"));
             throw new Error("Failed to logout!");
         }
     }, []);

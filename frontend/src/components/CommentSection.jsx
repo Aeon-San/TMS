@@ -101,7 +101,7 @@ const CommentSection = ({ taskId, board, task, darkMode }) => {
         ) : (
           comments.map((comment) => (
             <div key={comment._id} className="flex gap-3">
-              <div className={darkMode ? "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#ff7b86] text-sm text-white" : "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm text-white"}>
+              <div className={darkMode ? "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#2563eb] text-sm text-white" : "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#2563eb] text-sm text-white"}>
                 {comment.user.name.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1">
@@ -139,7 +139,7 @@ const CommentSection = ({ taskId, board, task, darkMode }) => {
                     onClick={() => handleMentionSelect(user)}
                     className={darkMode ? "flex w-full items-center gap-2 p-2 text-left hover:bg-white/8" : "flex w-full items-center gap-2 p-2 text-left hover:bg-base-200"}
                   >
-                    <div className={darkMode ? "flex h-6 w-6 items-center justify-center rounded-full bg-[#ff7b86] text-xs text-white" : "flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-white"}>
+                    <div className={darkMode ? "flex h-6 w-6 items-center justify-center rounded-full bg-[#2563eb] text-xs text-white" : "flex h-6 w-6 items-center justify-center rounded-full bg-[#2563eb] text-xs text-white"}>
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <span className={darkMode ? "text-sm text-slate-100" : "text-sm"}>{user.name}</span>
@@ -150,7 +150,7 @@ const CommentSection = ({ taskId, board, task, darkMode }) => {
           </div>
           <button
             type="submit"
-            className={darkMode ? "btn self-end border-0 bg-[#ff7b86] text-white hover:bg-[#ff6a77]" : "btn btn-primary self-end"}
+            className={darkMode ? "btn self-end border-0 bg-[#2563eb] text-white hover:bg-[#1d4ed8]" : "btn btn-primary self-end"}
             disabled={loading || !newComment.trim()}
           >
             <FaPaperPlane className="h-4 w-4" />

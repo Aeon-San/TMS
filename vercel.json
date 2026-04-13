@@ -3,10 +3,13 @@
   "installCommand": "npm install && npm install --prefix backend --legacy-peer-deps && npm install --prefix frontend",
   "buildCommand": "npm run build",
   "outputDirectory": "frontend/dist",
+  "env": {
+    "VITE_USE_HASH_ROUTER": "false"
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index"
+      "destination": "/api/index.js"
     },
     {
       "source": "/(.*)",

@@ -289,7 +289,7 @@ const Dashboard = () => {
       daySeries,
       monthSeries,
       statusBreakdown: [
-        { label: "Completed", value: completedTasks, color: "#ff7b86" },
+        { label: "Completed", value: completedTasks, color: "#2563eb" },
         { label: "In Progress", value: inProgressTasks, color: "#9b8cff" },
         { label: "Pending", value: pendingTasks, color: "#ffb86b" },
       ],
@@ -341,36 +341,36 @@ const Dashboard = () => {
 
   const shellClass = darkMode
     ? "min-h-screen bg-[radial-gradient(circle_at_top,#2d1e33_0%,#16121b_42%,#0c0a10_100%)] pb-8 text-slate-100"
-    : "min-h-screen bg-[linear-gradient(180deg,#f8d9df_0%,#fff5f6_52%,#fbe7ec_100%)] pb-8 text-slate-900";
+    : "min-h-screen bg-white pb-8 text-slate-900";
   const sidebarClass = darkMode
     ? "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-white/8 bg-white/5 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur"
-    : "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-white/60 bg-white/75 p-5 shadow-[0_20px_60px_rgba(163,82,104,0.12)] backdrop-blur";
+    : "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-slate-200 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.06)]";
   const contentClass = darkMode
     ? "flex-1 rounded-[36px] border border-white/8 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur"
-    : "flex-1 rounded-[36px] border border-white/60 bg-white/70 p-6 shadow-[0_20px_60px_rgba(163,82,104,0.12)] backdrop-blur";
+    : "flex-1 rounded-[36px] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.06)]";
   const topBarClass = darkMode
     ? "mb-6 flex flex-col gap-4 rounded-[28px] border border-white/8 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-5 shadow-sm xl:flex-row xl:items-center xl:justify-between"
-    : "mb-6 flex flex-col gap-4 rounded-[28px] bg-[linear-gradient(135deg,#fff7f8_0%,#ffe7ed_100%)] p-5 shadow-sm xl:flex-row xl:items-center xl:justify-between";
+    : "mb-6 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)] xl:flex-row xl:items-center xl:justify-between";
   const analyticsCardClass = darkMode
     ? "rounded-[26px] border border-white/8 bg-white/6 p-5 shadow-sm"
-    : "rounded-[26px] border border-white/70 bg-white/80 p-5 shadow-sm";
+    : "rounded-[26px] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)]";
   const filterSelectClass = darkMode
     ? "select w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-200 shadow-sm"
-    : "select w-full rounded-2xl border border-[#f2c2cd] bg-[#fff8fa] text-slate-700 shadow-sm";
-  const sidebarTextMuted = darkMode ? "text-slate-400" : "text-slate-600";
-  const pageTitleClass = darkMode ? "text-3xl font-black tracking-tight text-white" : "text-3xl font-black tracking-tight text-slate-900";
+    : "select w-full rounded-2xl border border-slate-200 bg-[#fff8fa] text-slate-700 shadow-sm";
+  const sidebarTextMuted = darkMode ? "text-slate-400" : "text-slate-500";
+  const pageTitleClass = darkMode ? "text-3xl font-black tracking-tight text-white" : "text-3xl font-black tracking-tight text-slate-950";
   const navItemBase = darkMode
     ? "flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 transition hover:bg-white/8"
-    : "flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-700 transition hover:bg-[#fff0f4]";
+    : "flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-700 transition hover:bg-slate-100";
   const mobilePanelClass = darkMode
     ? "fixed inset-y-0 left-0 z-50 w-[88vw] max-w-sm overflow-y-auto border-r border-white/8 bg-[#120f17]/95 p-5 text-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur"
-    : "fixed inset-y-0 left-0 z-50 w-[88vw] max-w-sm overflow-y-auto border-r border-white/60 bg-white/95 p-5 text-slate-900 shadow-[0_20px_60px_rgba(163,82,104,0.18)] backdrop-blur";
+    : "fixed inset-y-0 left-0 z-50 w-[88vw] max-w-sm overflow-y-auto border-r border-slate-200 bg-white p-5 text-slate-900 shadow-[0_20px_60px_rgba(15,23,42,0.08)]";
 
   if (loading) {
     return (
       <div className={`${shellClass} flex items-center justify-center`}>
         <div className={darkMode ? "rounded-[28px] bg-white/8 p-8 shadow-[0_24px_60px_rgba(0,0,0,0.28)]" : "rounded-[28px] bg-white p-8 shadow-[0_24px_60px_rgba(163,82,104,0.16)]"}>
-          <span className="loading loading-infinity loading-xl text-4xl text-[#d45d83]"></span>
+          <span className="loading loading-infinity loading-xl text-4xl text-[#2563eb]"></span>
           <p className={`mt-4 ${sidebarTextMuted}`}>Loading your tasks...</p>
         </div>
       </div>
@@ -385,7 +385,7 @@ const Dashboard = () => {
             <div className={mobilePanelClass}>
               <div className="mb-5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.28)]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.28)]">
                     <IoSparklesOutline size={22} />
                   </div>
                   <div>
@@ -403,7 +403,7 @@ const Dashboard = () => {
               </div>
 
               <div className="mb-6 space-y-2">
-                <Link to="/dashboard" onClick={() => setShowMobileSidebar(false)} className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-[#ffe8ee] text-slate-900 shadow-sm"}`}>
+                <Link to="/dashboard" onClick={() => setShowMobileSidebar(false)} className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-blue-50 text-slate-900 shadow-sm"}`}>
                   <FiHome />
                   <span className="font-medium">Dashboard</span>
                 </Link>
@@ -440,7 +440,7 @@ const Dashboard = () => {
                 </div>
                 <div className="mb-4">
                   <label className={darkMode ? "mb-2 block text-sm font-medium text-slate-300" : "mb-2 block text-sm font-medium text-slate-700"}>Tag Search</label>
-                  <input value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-[#f2c2cd] bg-[#fff8fa] p-3 text-slate-700 outline-none"} placeholder="Search by tag" />
+                  <input value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-slate-700 outline-none"} placeholder="Search by tag" />
                 </div>
                 <div className="mb-4">
                   <label className={darkMode ? "mb-2 block text-sm font-medium text-slate-300" : "mb-2 block text-sm font-medium text-slate-700"}>Deadline</label>
@@ -464,7 +464,7 @@ const Dashboard = () => {
                     { key: "kanban", label: "Kanban", icon: MdViewKanban },
                     { key: "calendar", label: "Calendar", icon: null },
                   ].map(({ key, label, icon: Icon }) => (
-                    <button key={key} onClick={() => { setViewMode(key); setShowMobileSidebar(false); }} className={`btn btn-sm rounded-2xl border-0 ${viewMode === key ? "bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.3)]" : darkMode ? "bg-white/8 text-slate-200 hover:bg-white/12" : "bg-[#fff3f6] text-slate-700 hover:bg-[#ffe4eb]"}`}>
+                    <button key={key} onClick={() => { setViewMode(key); setShowMobileSidebar(false); }} className={`btn btn-sm rounded-2xl border-0 ${viewMode === key ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]" : darkMode ? "bg-white/8 text-slate-200 hover:bg-white/12" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}>
                       {Icon ? <Icon className="mr-1 h-4 w-4" /> : null}{label}
                     </button>
                   ))}
@@ -476,7 +476,7 @@ const Dashboard = () => {
         ) : null}
         <aside className={`${sidebarClass} hidden xl:block`}>
           <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.28)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.28)]">
               <IoSparklesOutline size={24} />
             </div>
             <div>
@@ -486,7 +486,7 @@ const Dashboard = () => {
           </div>
 
           <div className="mb-6 space-y-2">
-            <Link to="/dashboard" className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-[#ffe8ee] text-slate-900 shadow-sm"}`}>
+            <Link to="/dashboard" className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-blue-50 text-slate-900 shadow-sm"}`}>
               <FiHome />
               <span className="font-medium">Dashboard</span>
             </Link>
@@ -545,7 +545,7 @@ const Dashboard = () => {
               <input
                 value={tagFilter}
                 onChange={(e) => setTagFilter(e.target.value)}
-                className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-[#f2c2cd] bg-[#fff8fa] p-3 text-slate-700 outline-none"}
+                className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-slate-700 outline-none"}
                 placeholder="Search by tag"
               />
             </div>
@@ -580,10 +580,10 @@ const Dashboard = () => {
                 onClick={() => setViewMode("grid")}
                 className={`btn btn-sm rounded-2xl border-0 ${
                   viewMode === "grid"
-                    ? "bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.3)]"
+                    ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]"
                     : darkMode
                       ? "bg-white/8 text-slate-200 hover:bg-white/12"
-                      : "bg-[#fff3f6] text-slate-700 hover:bg-[#ffe4eb]"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
               >
                 <MdGridView className="mr-1 h-4 w-4" />
@@ -593,10 +593,10 @@ const Dashboard = () => {
                 onClick={() => setViewMode("kanban")}
                 className={`btn btn-sm rounded-2xl border-0 ${
                   viewMode === "kanban"
-                    ? "bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.3)]"
+                    ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]"
                     : darkMode
                       ? "bg-white/8 text-slate-200 hover:bg-white/12"
-                      : "bg-[#fff3f6] text-slate-700 hover:bg-[#ffe4eb]"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
               >
                 <MdViewKanban className="mr-1 h-4 w-4" />
@@ -606,10 +606,10 @@ const Dashboard = () => {
                 onClick={() => setViewMode("calendar")}
                 className={`btn btn-sm rounded-2xl border-0 ${
                   viewMode === "calendar"
-                    ? "bg-[#ff7b86] text-white shadow-[0_12px_24px_rgba(255,123,134,0.3)]"
+                    ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]"
                     : darkMode
                       ? "bg-white/8 text-slate-200 hover:bg-white/12"
-                      : "bg-[#fff3f6] text-slate-700 hover:bg-[#ffe4eb]"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
               >
                 Calendar
@@ -630,7 +630,7 @@ const Dashboard = () => {
                 >
                   <FiMenu />
                 </button>
-                <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-300" : "rounded-2xl bg-[#fff0f4] px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-600"}>
+                <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-300" : "rounded-2xl bg-slate-100 px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-600"}>
                   {selectedBoard ? "Board View" : "Workspace"}
                 </div>
               </div>
@@ -659,7 +659,7 @@ const Dashboard = () => {
             {analyticsCards.map(({ label, value, subtext, icon: Icon }) => (
               <div key={label} className={analyticsCardClass}>
                 <div className="mb-4 flex items-center justify-between">
-                  <div className={darkMode ? "rounded-2xl bg-[#ff7b86]/20 p-3 text-[#ff9bab]" : "rounded-2xl bg-[#fff0f4] p-3 text-[#d45d83]"}>
+                  <div className={darkMode ? "rounded-2xl bg-[#2563eb]/20 p-3 text-[#93c5fd]" : "rounded-2xl bg-blue-50 p-3 text-[#2563eb]"}>
                     <Icon size={20} />
                   </div>
                   <span className={darkMode ? "text-xs uppercase tracking-[0.25em] text-slate-400" : "text-xs uppercase tracking-[0.25em] text-slate-500"}>
@@ -669,8 +669,8 @@ const Dashboard = () => {
                 <div className={darkMode ? "text-3xl font-black text-white" : "text-3xl font-black text-slate-900"}>{value}</div>
                 <p className={`mt-2 text-sm ${sidebarTextMuted}`}>{subtext}</p>
                 {label === "Completed" ? (
-                  <div className={darkMode ? "mt-4 h-2 rounded-full bg-white/10" : "mt-4 h-2 rounded-full bg-[#ffe2e9]"}>
-                    <div className="h-full rounded-full bg-[#ff7b86] transition-all duration-500" style={{ width: `${completionRate}%` }} />
+                  <div className={darkMode ? "mt-4 h-2 rounded-full bg-white/10" : "mt-4 h-2 rounded-full bg-slate-100"}>
+                    <div className="h-full rounded-full bg-[#2563eb] transition-all duration-500" style={{ width: `${completionRate}%` }} />
                   </div>
                 ) : null}
               </div>
@@ -698,7 +698,7 @@ const Dashboard = () => {
 
           {loadingTasks ? (
             <div className="flex items-center justify-center py-12">
-              <span className="loading loading-spinner loading-lg text-[#d45d83]"></span>
+              <span className="loading loading-spinner loading-lg text-[#2563eb]"></span>
             </div>
           ) : filteredData.length === 0 ? (
             <div className={darkMode ? "rounded-[28px] border border-dashed border-white/10 bg-white/5 py-12 text-center" : "rounded-[28px] border border-dashed border-[#efc3cf] bg-[#fff7f8] py-12 text-center"}>
@@ -750,8 +750,8 @@ const Dashboard = () => {
           <div className="w-full max-w-2xl px-1">
             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-white">{selectedTask.taskName}</h2>
-                <p className="mt-1 text-sm text-slate-400">
+                <h2 className="text-2xl font-bold text-slate-950">{selectedTask.taskName}</h2>
+                <p className="mt-1 text-sm text-slate-500">
                   {selectedTask.dueDate ? `Deadline: ${new Date(selectedTask.dueDate).toLocaleString()}` : "No deadline set"}
                 </p>
               </div>
@@ -761,7 +761,7 @@ const Dashboard = () => {
                     setEditingTask(selectedTask);
                     setSelectedTask(null);
                   }}
-                  className="btn btn-sm border-0 bg-[#ff7b86] text-white hover:bg-[#ff6a77]"
+                  className="btn btn-sm border-0 bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                 >
                   Edit
                 </button>
@@ -776,13 +776,13 @@ const Dashboard = () => {
 
             <div className="space-y-4">
               <div>
-                <h3 className="mb-2 text-sm font-semibold text-gray-300">Status</h3>
+                <h3 className="mb-2 text-sm font-semibold text-slate-700">Status</h3>
                 <div className="flex flex-wrap gap-2">
                   {["Pending", "In Progress", "Completed"].map((status) => (
                     <button
                       key={status}
                       onClick={() => handleUpdateTask(selectedTask._id, { taskStatus: status })}
-                      className={`btn btn-sm ${selectedTask.taskStatus === status ? "btn-primary" : "btn-outline"}`}
+                      className={`btn btn-sm rounded-2xl border-0 ${selectedTask.taskStatus === status ? "bg-[#2563eb] text-white hover:bg-[#1d4ed8]" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}
                     >
                       {status}
                     </button>
@@ -791,25 +791,25 @@ const Dashboard = () => {
               </div>
 
               <div>
-                <h3 className="mb-2 text-sm font-semibold text-gray-300">Description</h3>
-                <p className="text-gray-300">{selectedTask.description || "No description"}</p>
+                <h3 className="mb-2 text-sm font-semibold text-slate-700">Description</h3>
+                <p className="text-slate-600">{selectedTask.description || "No description"}</p>
               </div>
 
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div>
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">Priority</h3>
-                  <span className={`badge ${
-                    selectedTask.priority === "High" ? "badge-error" :
-                    selectedTask.priority === "Medium" ? "badge-warning" :
-                    "badge-success"
+                  <h3 className="mb-2 text-sm font-semibold text-slate-700">Priority</h3>
+                  <span className={`badge border-0 ${
+                    selectedTask.priority === "High" ? "bg-sky-100 text-sky-700" :
+                    selectedTask.priority === "Medium" ? "bg-amber-100 text-amber-700" :
+                    "bg-slate-100 text-slate-700"
                   }`}>
                     {selectedTask.priority}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">Category</h3>
-                  <span className="rounded-full bg-white/8 px-3 py-1 text-sm text-slate-200">
+                  <h3 className="mb-2 text-sm font-semibold text-slate-700">Category</h3>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
                     {selectedTask.category || "General"}
                   </span>
                 </div>
@@ -817,10 +817,10 @@ const Dashboard = () => {
 
               {Array.isArray(selectedTask.tags) && selectedTask.tags.length > 0 ? (
                 <div>
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">Tags</h3>
+                  <h3 className="mb-2 text-sm font-semibold text-slate-700">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedTask.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-[#2b2133] px-3 py-1 text-sm text-[#ffb5c4]">
+                      <span key={tag} className="rounded-full bg-blue-50 px-3 py-1 text-sm text-[#1d4ed8]">
                         #{tag}
                       </span>
                     ))}
@@ -843,22 +843,22 @@ const Dashboard = () => {
               />
 
               <div>
-                <h3 className="mb-2 text-sm font-semibold text-gray-300">Activity History</h3>
-                <div className="max-h-56 space-y-3 overflow-y-auto rounded-2xl border border-white/8 bg-white/5 p-4">
+                <h3 className="mb-2 text-sm font-semibold text-slate-700">Activity History</h3>
+                <div className="max-h-56 space-y-3 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4">
                   {selectedTask.activityHistory?.length ? (
                     [...selectedTask.activityHistory]
                       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                       .map((entry, index) => (
-                        <div key={`${entry.createdAt}-${index}`} className="border-b border-white/6 pb-3 last:border-b-0 last:pb-0">
-                          <div className="text-sm font-medium text-white">{entry.summary}</div>
-                          <div className="mt-1 text-xs text-slate-400">
+                        <div key={`${entry.createdAt}-${index}`} className="border-b border-slate-200 pb-3 last:border-b-0 last:pb-0">
+                          <div className="text-sm font-medium text-slate-900">{entry.summary}</div>
+                          <div className="mt-1 text-xs text-slate-500">
                             {new Date(entry.createdAt).toLocaleString()}
                           </div>
                           {entry.changes?.length ? (
                             <div className="mt-2 flex flex-wrap gap-2">
                               {entry.changes.map((change, changeIndex) => (
-                                <span key={`${change.field}-${changeIndex}`} className="rounded-full bg-white/8 px-2 py-1 text-xs text-slate-300">
-                                  {change.field}: {String(change.oldValue ?? "empty")} → {String(change.newValue ?? "empty")}
+                                <span key={`${change.field}-${changeIndex}`} className="rounded-full bg-white px-2 py-1 text-xs text-slate-600">
+                                  {change.field}: {String(change.oldValue ?? "empty")} {"->"} {String(change.newValue ?? "empty")}
                                 </span>
                               ))}
                             </div>
@@ -866,7 +866,7 @@ const Dashboard = () => {
                         </div>
                       ))
                   ) : (
-                    <div className="text-sm text-slate-400">No activity yet.</div>
+                    <div className="text-sm text-slate-500">No activity yet.</div>
                   )}
                 </div>
               </div>

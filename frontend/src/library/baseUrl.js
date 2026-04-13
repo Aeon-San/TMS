@@ -10,8 +10,10 @@ export const createApiBase = (path) => {
   }
 
   return import.meta.env.MODE === "development"
-    ? `http://localhost:9000${normalizedPath}`
+    ? `http://localhost:5001${normalizedPath}`
     : normalizedPath;
 };
 
-export const useHashRouter = import.meta.env.VITE_USE_HASH_ROUTER === "true";
+export const useHashRouter =
+  import.meta.env.VITE_USE_HASH_ROUTER === "true" ||
+  (import.meta.env.MODE === "production" && import.meta.env.VITE_USE_HASH_ROUTER !== "false");

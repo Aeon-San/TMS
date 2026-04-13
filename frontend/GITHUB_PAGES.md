@@ -15,7 +15,7 @@ VITE_USE_HASH_ROUTER=true
 Example:
 
 ```env
-VITE_BASE_PATH=/Task-Management-System-2-main/
+VITE_BASE_PATH=/YOUR_REPOSITORY_NAME/
 VITE_API_BASE_URL=https://your-backend-domain.com
 VITE_USE_HASH_ROUTER=true
 ```
@@ -23,14 +23,15 @@ VITE_USE_HASH_ROUTER=true
 ### 2. Install dependencies
 
 ```powershell
-cd frontend
 npm install
 ```
 
-### 3. Deploy
+### 3. Build and deploy
+
+From the repo root:
 
 ```powershell
-npm run deploy
+npm run deploy:frontend
 ```
 
 ### 4. GitHub repo settings

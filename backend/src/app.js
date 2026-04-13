@@ -24,7 +24,7 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "../..");
 const frontendDist = path.join(repoRoot, "frontend", "dist");
 const tempDir = path.join(os.tmpdir(), "task-management-system");
-const PORT = process.env.PORT || 9000;
+const PORT = Number(process.env.PORT || 5001);
 
 let initializationPromise;
 
@@ -55,6 +55,7 @@ const allowedOrigins = new Set([
 export const app = express();
 
 app.disable("x-powered-by");
+app.set("trust proxy", 1);
 app.use(express.json({ limit: API_BODY_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: API_BODY_LIMIT }));
 app.use(cookieParser());
@@ -85,6 +86,25 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    version: "1.0.0"
+  });
+});
+
+// Public landing page data endpoint
+app.get("/api/public/stats", (req, res) => {
+  res.status(200).json({
+    activeUsers: 10000,
+    completedTasks: 100000,
+    uptime: 99.9,
+    message: "Welcome to TaskFlow"
+  });
+});
+
 app.use("/api", apiCors);
 app.use("/api/auth", authRoutes);
 app.use("/api/task", taskRouter);
@@ -92,12 +112,24 @@ app.use("/api/board", boardRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 if (fs.existsSync(frontendDist)) {
-  app.use(express.static(frontendDist));
+  // Serve static files with cache headers
+  app.use(express.static(frontendDist, {
+    maxAge: '1y',
+    etag: false,
+    lastModified: false,
+    redirect: false
+  }));
 
+  // Handle index.html for SPA routing
   app.get("*", (req, res, next) => {
     if (req.path.startsWith("/api/")) {
       return next();
     }
+
+    // Set no-cache headers for index.html
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
 
     return res.sendFile(path.join(frontendDist, "index.html"));
   });

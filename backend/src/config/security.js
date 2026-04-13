@@ -10,7 +10,7 @@ export const TOKEN_EXPIRY = process.env.JWT_EXPIRES_IN || '12h';
 export const COOKIE_NAME = process.env.AUTH_COOKIE_NAME || 'JwtToken';
 export const COOKIE_OPTIONS = {
   httpOnly: true,
-  sameSite: isProduction ? 'strict' : 'lax',
+  sameSite: isProduction ? 'none' : 'lax',
   secure: isProduction,
   path: '/',
   maxAge: SESSION_TIMEOUT_MS,

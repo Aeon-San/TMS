@@ -35,7 +35,7 @@ const PieSlice = ({ cx, cy, radius, startAngle, endAngle, color }) => {
 const ProductivityCharts = ({ analytics, darkMode }) => {
   const chartShell = darkMode
     ? "rounded-[28px] border border-white/8 bg-white/5 p-5 shadow-sm"
-    : "rounded-[28px] border border-white/70 bg-white/80 p-5 shadow-sm";
+    : "rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)]";
   const mutedText = darkMode ? "text-slate-400" : "text-slate-500";
   const titleText = darkMode ? "text-white" : "text-slate-900";
 
@@ -58,7 +58,7 @@ const ProductivityCharts = ({ analytics, darkMode }) => {
             <h3 className={`text-xl font-bold ${titleText}`}>Productivity Overview</h3>
             <p className={`text-sm ${mutedText}`}>Daily completions and work rhythm across the week.</p>
           </div>
-          <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-sm text-slate-300" : "rounded-2xl bg-[#fff3f6] px-3 py-2 text-sm text-slate-600"}>
+          <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-sm text-slate-300" : "rounded-2xl bg-blue-50 px-3 py-2 text-sm text-blue-700"}>
             Peak hour: {analytics.peakHourLabel}
           </div>
         </div>
@@ -72,9 +72,9 @@ const ProductivityCharts = ({ analytics, darkMode }) => {
             <div className="flex h-56 items-end gap-3">
               {analytics.daySeries.map((item) => (
                 <div key={item.label} className="flex flex-1 flex-col items-center gap-2">
-                  <div className={darkMode ? "flex h-44 w-full items-end rounded-2xl bg-white/6 px-2 pb-2" : "flex h-44 w-full items-end rounded-2xl bg-[#fff6f8] px-2 pb-2"}>
+                  <div className={darkMode ? "flex h-44 w-full items-end rounded-2xl bg-white/6 px-2 pb-2" : "flex h-44 w-full items-end rounded-2xl bg-slate-50 px-2 pb-2"}>
                     <div
-                      className="w-full rounded-2xl bg-[linear-gradient(180deg,#ffb7c4_0%,#ff7b86_100%)] transition-all duration-500"
+                      className="w-full rounded-2xl bg-[linear-gradient(180deg,#93c5fd_0%,#2563eb_100%)] transition-all duration-500"
                       style={{ height: `${(item.value / maxDayValue) * 100}%`, minHeight: item.value ? "18px" : "6px" }}
                     />
                   </div>
@@ -89,12 +89,12 @@ const ProductivityCharts = ({ analytics, darkMode }) => {
               <span className={`text-sm font-medium ${mutedText}`}>Monthly completion trend</span>
               <span className={`text-sm ${mutedText}`}>{analytics.monthCompleted} tasks this month</span>
             </div>
-            <div className={darkMode ? "rounded-[24px] border border-white/8 bg-[#140f18] p-4" : "rounded-[24px] border border-[#f3d2db] bg-[#fff9fa] p-4"}>
+            <div className={darkMode ? "rounded-[24px] border border-white/8 bg-[#140f18] p-4" : "rounded-[24px] border border-slate-200 bg-slate-50 p-4"}>
               <svg viewBox="0 0 320 180" className="h-56 w-full">
                 <defs>
                   <linearGradient id="productivityLine" x1="0%" x2="0%" y1="0%" y2="100%">
-                    <stop offset="0%" stopColor="#ff7b86" stopOpacity="1" />
-                    <stop offset="100%" stopColor="#ffb7c4" stopOpacity="0.45" />
+                    <stop offset="0%" stopColor="#2563eb" stopOpacity="1" />
+                    <stop offset="100%" stopColor="#93c5fd" stopOpacity="0.45" />
                   </linearGradient>
                 </defs>
                 <polyline
@@ -114,7 +114,7 @@ const ProductivityCharts = ({ analytics, darkMode }) => {
 
                   return (
                     <g key={item.label}>
-                      <circle cx={x} cy={y} r="4" fill="#ff7b86" />
+                      <circle cx={x} cy={y} r="4" fill="#2563eb" />
                       <text x={x} y="172" textAnchor="middle" fontSize="11" fill={darkMode ? "#94a3b8" : "#64748b"}>
                         {item.label}
                       </text>
@@ -158,7 +158,7 @@ const ProductivityCharts = ({ analytics, darkMode }) => {
 
             <div className="w-full space-y-3">
               {analytics.statusBreakdown.map((item) => (
-                <div key={item.label} className={darkMode ? "rounded-2xl bg-white/6 p-3" : "rounded-2xl bg-[#fff7f8] p-3"}>
+                <div key={item.label} className={darkMode ? "rounded-2xl bg-white/6 p-3" : "rounded-2xl bg-slate-50 p-3"}>
                   <div className="mb-2 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} />
@@ -166,7 +166,7 @@ const ProductivityCharts = ({ analytics, darkMode }) => {
                     </div>
                     <span className={`text-sm ${mutedText}`}>{item.value}</span>
                   </div>
-                  <div className={darkMode ? "h-2 rounded-full bg-white/8" : "h-2 rounded-full bg-[#ffe2e9]"}>
+                  <div className={darkMode ? "h-2 rounded-full bg-white/8" : "h-2 rounded-full bg-slate-200"}>
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${(item.value / totalPie) * 100}%`, backgroundColor: item.color }}
@@ -185,15 +185,15 @@ const ProductivityCharts = ({ analytics, darkMode }) => {
           </div>
 
           <div className="grid gap-3">
-            <div className={darkMode ? "rounded-2xl bg-white/6 p-4" : "rounded-2xl bg-[#fff7f8] p-4"}>
+            <div className={darkMode ? "rounded-2xl bg-white/6 p-4" : "rounded-2xl bg-slate-50 p-4"}>
               <div className={`text-sm ${mutedText}`}>Most productive day</div>
               <div className={`mt-1 text-lg font-bold ${titleText}`}>{analytics.bestDayLabel}</div>
             </div>
-            <div className={darkMode ? "rounded-2xl bg-white/6 p-4" : "rounded-2xl bg-[#fff7f8] p-4"}>
+            <div className={darkMode ? "rounded-2xl bg-white/6 p-4" : "rounded-2xl bg-slate-50 p-4"}>
               <div className={`text-sm ${mutedText}`}>Peak working hour</div>
               <div className={`mt-1 text-lg font-bold ${titleText}`}>{analytics.peakHourLabel}</div>
             </div>
-            <div className={darkMode ? "rounded-2xl bg-white/6 p-4" : "rounded-2xl bg-[#fff7f8] p-4"}>
+            <div className={darkMode ? "rounded-2xl bg-white/6 p-4" : "rounded-2xl bg-slate-50 p-4"}>
               <div className={`text-sm ${mutedText}`}>Completion trend</div>
               <div className={`mt-1 text-lg font-bold ${titleText}`}>{analytics.completionRate}% done</div>
             </div>

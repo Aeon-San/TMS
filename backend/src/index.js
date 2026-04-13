@@ -1,6 +1,6 @@
 import { app, initializeAppResources } from "./app.js";
 
-const PORT = process.env.PORT || 9000;
+const PORT = Number(process.env.PORT || 5001);
 
 initializeAppResources()
   .then(() => {

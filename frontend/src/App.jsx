@@ -29,16 +29,16 @@ function App() {
       <Routes>
 
         <Route element={<PublicLayout/>}>
-        <Route path="/home" element={<Home/>} />
+          <Route path="/" element={<Home/>} />
+          <Route path="/home" element={<Home/>} />
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/dashboard" />} />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
           <Route path="/forgot-password" element={!user ? <ForgotPassword /> : <Navigate to="/dashboard" />} />
           <Route path="/reset-password/:token" element={!user ? <ResetPassword /> : <Navigate to="/dashboard" />} />
         </Route>
-        
+
 
         <Route element={<ProtectedLayout/>}>
-          <Route path="/" element={user ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />
         </Route>
@@ -48,7 +48,7 @@ function App() {
       </Routes>
 
     </div>
-  
+
   );
 }
 

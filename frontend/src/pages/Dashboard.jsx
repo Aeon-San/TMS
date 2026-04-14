@@ -36,7 +36,10 @@ const Dashboard = () => {
   const [editingTask, setEditingTask] = useState(null);
   const [search, setSearch] = useState("");
   const [loadingTasks, setLoadingTasks] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("dashboard-theme") === "dark");
+  const [darkMode, setDarkMode] = useState(() => {
+    const storedTheme = localStorage.getItem("dashboard-theme");
+    return storedTheme ? storedTheme === "dark" : true;
+  });
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const { isOpen, onOpen, onClose } = usePortal();
   const { loading, user } = useAuth();
@@ -289,9 +292,9 @@ const Dashboard = () => {
       daySeries,
       monthSeries,
       statusBreakdown: [
-        { label: "Completed", value: completedTasks, color: "#2563eb" },
-        { label: "In Progress", value: inProgressTasks, color: "#9b8cff" },
-        { label: "Pending", value: pendingTasks, color: "#ffb86b" },
+        { label: "Completed", value: completedTasks, color: "#2f66dd" },
+        { label: "In Progress", value: inProgressTasks, color: "#5a86e8" },
+        { label: "Pending", value: pendingTasks, color: "#8fb2ff" },
       ],
       bestDayLabel: bestDay.label,
       peakHourLabel: `${String(peakHour.hour).padStart(2, "0")}:00`,
@@ -340,37 +343,37 @@ const Dashboard = () => {
   }, [data]);
 
   const shellClass = darkMode
-    ? "min-h-screen bg-[radial-gradient(circle_at_top,#2d1e33_0%,#16121b_42%,#0c0a10_100%)] pb-8 text-slate-100"
-    : "min-h-screen bg-white pb-8 text-slate-900";
+    ? "min-h-screen bg-[radial-gradient(circle_at_top,#1a2947_0%,#111b31_42%,#0a1120_100%)] pb-8 text-slate-100"
+    : "min-h-screen bg-[linear-gradient(180deg,#ecf3ff_0%,#f8fbff_52%,#e7f0ff_100%)] pb-8 text-slate-900";
   const sidebarClass = darkMode
     ? "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-white/8 bg-white/5 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur"
-    : "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-slate-200 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.06)]";
+    : "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-white/60 bg-white/75 p-5 shadow-[0_20px_60px_rgba(163,82,104,0.12)] backdrop-blur";
   const contentClass = darkMode
     ? "flex-1 rounded-[36px] border border-white/8 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur"
-    : "flex-1 rounded-[36px] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.06)]";
+    : "flex-1 rounded-[36px] border border-white/60 bg-white/70 p-6 shadow-[0_20px_60px_rgba(163,82,104,0.12)] backdrop-blur";
   const topBarClass = darkMode
     ? "mb-6 flex flex-col gap-4 rounded-[28px] border border-white/8 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-5 shadow-sm xl:flex-row xl:items-center xl:justify-between"
-    : "mb-6 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)] xl:flex-row xl:items-center xl:justify-between";
+    : "mb-6 flex flex-col gap-4 rounded-[28px] bg-[linear-gradient(135deg,#f7faff_0%,#eaf2ff_100%)] p-5 shadow-sm xl:flex-row xl:items-center xl:justify-between";
   const analyticsCardClass = darkMode
     ? "rounded-[26px] border border-white/8 bg-white/6 p-5 shadow-sm"
-    : "rounded-[26px] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)]";
+    : "rounded-[26px] border border-white/70 bg-white/80 p-5 shadow-sm";
   const filterSelectClass = darkMode
-    ? "select w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-200 shadow-sm"
-    : "select w-full rounded-2xl border border-slate-200 bg-[#fff8fa] text-slate-700 shadow-sm";
-  const sidebarTextMuted = darkMode ? "text-slate-400" : "text-slate-500";
-  const pageTitleClass = darkMode ? "text-3xl font-black tracking-tight text-white" : "text-3xl font-black tracking-tight text-slate-950";
+    ? "select w-full rounded-2xl border border-white/10 bg-[#1a2742] text-slate-200 shadow-sm"
+    : "select w-full rounded-2xl border border-[#c9d9f6] bg-[#f8fbff] text-slate-700 shadow-sm";
+  const sidebarTextMuted = darkMode ? "text-slate-400" : "text-slate-600";
+  const pageTitleClass = darkMode ? "text-3xl font-black tracking-tight text-white" : "text-3xl font-black tracking-tight text-slate-900";
   const navItemBase = darkMode
     ? "flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 transition hover:bg-white/8"
-    : "flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-700 transition hover:bg-slate-100";
+    : "flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-700 transition hover:bg-[#edf4ff]";
   const mobilePanelClass = darkMode
-    ? "fixed inset-y-0 left-0 z-50 w-[88vw] max-w-sm overflow-y-auto border-r border-white/8 bg-[#120f17]/95 p-5 text-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur"
-    : "fixed inset-y-0 left-0 z-50 w-[88vw] max-w-sm overflow-y-auto border-r border-slate-200 bg-white p-5 text-slate-900 shadow-[0_20px_60px_rgba(15,23,42,0.08)]";
+    ? "fixed inset-y-0 left-0 z-50 w-[88vw] max-w-sm overflow-y-auto border-r border-white/8 bg-[#0e1a30]/95 p-5 text-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur"
+    : "fixed inset-y-0 left-0 z-50 w-[88vw] max-w-sm overflow-y-auto border-r border-white/60 bg-white/95 p-5 text-slate-900 shadow-[0_20px_60px_rgba(55,110,210,0.18)] backdrop-blur";
 
   if (loading) {
     return (
       <div className={`${shellClass} flex items-center justify-center`}>
         <div className={darkMode ? "rounded-[28px] bg-white/8 p-8 shadow-[0_24px_60px_rgba(0,0,0,0.28)]" : "rounded-[28px] bg-white p-8 shadow-[0_24px_60px_rgba(163,82,104,0.16)]"}>
-          <span className="loading loading-infinity loading-xl text-4xl text-[#2563eb]"></span>
+          <span className="loading loading-infinity loading-xl text-4xl text-[#2f66dd]"></span>
           <p className={`mt-4 ${sidebarTextMuted}`}>Loading your tasks...</p>
         </div>
       </div>
@@ -385,7 +388,7 @@ const Dashboard = () => {
             <div className={mobilePanelClass}>
               <div className="mb-5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.28)]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.28)]">
                     <IoSparklesOutline size={22} />
                   </div>
                   <div>
@@ -396,14 +399,14 @@ const Dashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowMobileSidebar(false)}
-                  className={darkMode ? "rounded-2xl bg-white/8 p-3 text-slate-100" : "rounded-2xl bg-[#fff1f4] p-3 text-slate-700"}
+                  className={darkMode ? "rounded-2xl bg-white/8 p-3 text-slate-100" : "rounded-2xl bg-[#edf4ff] p-3 text-slate-700"}
                 >
                   <FiX />
                 </button>
               </div>
 
               <div className="mb-6 space-y-2">
-                <Link to="/dashboard" onClick={() => setShowMobileSidebar(false)} className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-blue-50 text-slate-900 shadow-sm"}`}>
+                <Link to="/dashboard" onClick={() => setShowMobileSidebar(false)} className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-[#e6efff] text-slate-900 shadow-sm"}`}>
                   <FiHome />
                   <span className="font-medium">Dashboard</span>
                 </Link>
@@ -440,7 +443,7 @@ const Dashboard = () => {
                 </div>
                 <div className="mb-4">
                   <label className={darkMode ? "mb-2 block text-sm font-medium text-slate-300" : "mb-2 block text-sm font-medium text-slate-700"}>Tag Search</label>
-                  <input value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-slate-700 outline-none"} placeholder="Search by tag" />
+                  <input value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1a2742] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-[#c9d9f6] bg-[#f8fbff] p-3 text-slate-700 outline-none"} placeholder="Search by tag" />
                 </div>
                 <div className="mb-4">
                   <label className={darkMode ? "mb-2 block text-sm font-medium text-slate-300" : "mb-2 block text-sm font-medium text-slate-700"}>Deadline</label>
@@ -464,7 +467,7 @@ const Dashboard = () => {
                     { key: "kanban", label: "Kanban", icon: MdViewKanban },
                     { key: "calendar", label: "Calendar", icon: null },
                   ].map(({ key, label, icon: Icon }) => (
-                    <button key={key} onClick={() => { setViewMode(key); setShowMobileSidebar(false); }} className={`btn btn-sm rounded-2xl border-0 ${viewMode === key ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]" : darkMode ? "bg-white/8 text-slate-200 hover:bg-white/12" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}>
+                    <button key={key} onClick={() => { setViewMode(key); setShowMobileSidebar(false); }} className={`btn btn-sm rounded-2xl border-0 ${viewMode === key ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]" : darkMode ? "bg-white/8 text-slate-200 hover:bg-white/12" : "bg-[#edf4ff] text-slate-700 hover:bg-[#dfeaff]"}`}>
                       {Icon ? <Icon className="mr-1 h-4 w-4" /> : null}{label}
                     </button>
                   ))}
@@ -476,7 +479,7 @@ const Dashboard = () => {
         ) : null}
         <aside className={`${sidebarClass} hidden xl:block`}>
           <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.28)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.28)]">
               <IoSparklesOutline size={24} />
             </div>
             <div>
@@ -486,7 +489,7 @@ const Dashboard = () => {
           </div>
 
           <div className="mb-6 space-y-2">
-            <Link to="/dashboard" className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-blue-50 text-slate-900 shadow-sm"}`}>
+            <Link to="/dashboard" className={`${navItemBase} ${darkMode ? "bg-white/10 text-white" : "bg-[#e6efff] text-slate-900 shadow-sm"}`}>
               <FiHome />
               <span className="font-medium">Dashboard</span>
             </Link>
@@ -545,7 +548,7 @@ const Dashboard = () => {
               <input
                 value={tagFilter}
                 onChange={(e) => setTagFilter(e.target.value)}
-                className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-slate-700 outline-none"}
+                className={darkMode ? "w-full rounded-2xl border border-white/10 bg-[#1a2742] p-3 text-slate-200 outline-none" : "w-full rounded-2xl border border-[#c9d9f6] bg-[#f8fbff] p-3 text-slate-700 outline-none"}
                 placeholder="Search by tag"
               />
             </div>
@@ -580,10 +583,10 @@ const Dashboard = () => {
                 onClick={() => setViewMode("grid")}
                 className={`btn btn-sm rounded-2xl border-0 ${
                   viewMode === "grid"
-                    ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]"
+                    ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]"
                     : darkMode
                       ? "bg-white/8 text-slate-200 hover:bg-white/12"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      : "bg-[#edf4ff] text-slate-700 hover:bg-[#dfeaff]"
                 }`}
               >
                 <MdGridView className="mr-1 h-4 w-4" />
@@ -593,10 +596,10 @@ const Dashboard = () => {
                 onClick={() => setViewMode("kanban")}
                 className={`btn btn-sm rounded-2xl border-0 ${
                   viewMode === "kanban"
-                    ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]"
+                    ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]"
                     : darkMode
                       ? "bg-white/8 text-slate-200 hover:bg-white/12"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      : "bg-[#edf4ff] text-slate-700 hover:bg-[#dfeaff]"
                 }`}
               >
                 <MdViewKanban className="mr-1 h-4 w-4" />
@@ -606,10 +609,10 @@ const Dashboard = () => {
                 onClick={() => setViewMode("calendar")}
                 className={`btn btn-sm rounded-2xl border-0 ${
                   viewMode === "calendar"
-                    ? "bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]"
+                    ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]"
                     : darkMode
                       ? "bg-white/8 text-slate-200 hover:bg-white/12"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      : "bg-[#edf4ff] text-slate-700 hover:bg-[#dfeaff]"
                 }`}
               >
                 Calendar
@@ -630,7 +633,7 @@ const Dashboard = () => {
                 >
                   <FiMenu />
                 </button>
-                <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-300" : "rounded-2xl bg-slate-100 px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-600"}>
+                <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-300" : "rounded-2xl bg-[#edf4ff] px-3 py-2 text-xs uppercase tracking-[0.24em] text-slate-600"}>
                   {selectedBoard ? "Board View" : "Workspace"}
                 </div>
               </div>
@@ -646,7 +649,7 @@ const Dashboard = () => {
               <button
                 type="button"
                 onClick={() => setDarkMode((prev) => !prev)}
-                className={darkMode ? "btn rounded-2xl border-0 bg-white/8 text-slate-100 hover:bg-white/12" : "btn rounded-2xl border-0 bg-white text-slate-700 hover:bg-[#fff7f8]"}
+                className={darkMode ? "btn rounded-2xl border-0 bg-white/8 text-slate-100 hover:bg-white/12" : "btn rounded-2xl border-0 bg-white text-slate-700 hover:bg-[#f4f8ff]"}
               >
                 {darkMode ? <FiSun className="mr-2" /> : <FiMoon className="mr-2" />}
                 {darkMode ? "Light" : "Dark"} Mode
@@ -659,7 +662,7 @@ const Dashboard = () => {
             {analyticsCards.map(({ label, value, subtext, icon: Icon }) => (
               <div key={label} className={analyticsCardClass}>
                 <div className="mb-4 flex items-center justify-between">
-                  <div className={darkMode ? "rounded-2xl bg-[#2563eb]/20 p-3 text-[#93c5fd]" : "rounded-2xl bg-blue-50 p-3 text-[#2563eb]"}>
+                  <div className={darkMode ? "rounded-2xl bg-[#2f66dd]/20 p-3 text-[#8fb2ff]" : "rounded-2xl bg-[#edf4ff] p-3 text-[#2f66dd]"}>
                     <Icon size={20} />
                   </div>
                   <span className={darkMode ? "text-xs uppercase tracking-[0.25em] text-slate-400" : "text-xs uppercase tracking-[0.25em] text-slate-500"}>
@@ -669,17 +672,19 @@ const Dashboard = () => {
                 <div className={darkMode ? "text-3xl font-black text-white" : "text-3xl font-black text-slate-900"}>{value}</div>
                 <p className={`mt-2 text-sm ${sidebarTextMuted}`}>{subtext}</p>
                 {label === "Completed" ? (
-                  <div className={darkMode ? "mt-4 h-2 rounded-full bg-white/10" : "mt-4 h-2 rounded-full bg-slate-100"}>
-                    <div className="h-full rounded-full bg-[#2563eb] transition-all duration-500" style={{ width: `${completionRate}%` }} />
+                  <div className={darkMode ? "mt-4 h-2 rounded-full bg-white/10" : "mt-4 h-2 rounded-full bg-[#dbe7ff]"}>
+                    <div className="h-full rounded-full bg-[#2f66dd] transition-all duration-500" style={{ width: `${completionRate}%` }} />
                   </div>
                 ) : null}
               </div>
             ))}
           </div>
 
-          <div className="mb-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="mb-6 space-y-4">
             <ProductivityCharts analytics={productivityAnalytics} darkMode={darkMode} />
-            <PomodoroWidget darkMode={darkMode} activeTaskName={selectedTask?.taskName || filteredData[0]?.taskName} />
+            <div className="mx-auto w-full max-w-sm">
+              <PomodoroWidget darkMode={darkMode} activeTaskName={selectedTask?.taskName || filteredData[0]?.taskName} />
+            </div>
           </div>
 
           <div className="mb-6">
@@ -698,10 +703,10 @@ const Dashboard = () => {
 
           {loadingTasks ? (
             <div className="flex items-center justify-center py-12">
-              <span className="loading loading-spinner loading-lg text-[#2563eb]"></span>
+              <span className="loading loading-spinner loading-lg text-[#2f66dd]"></span>
             </div>
           ) : filteredData.length === 0 ? (
-            <div className={darkMode ? "rounded-[28px] border border-dashed border-white/10 bg-white/5 py-12 text-center" : "rounded-[28px] border border-dashed border-[#efc3cf] bg-[#fff7f8] py-12 text-center"}>
+            <div className={darkMode ? "rounded-[28px] border border-dashed border-white/10 bg-white/5 py-12 text-center" : "rounded-[28px] border border-dashed border-[#c9d9f6] bg-[#f7fbff] py-12 text-center"}>
               <div className="mb-4 text-6xl">No Tasks</div>
               <h3 className={darkMode ? "mb-2 text-xl font-semibold text-white" : "mb-2 text-xl font-semibold text-slate-900"}>No Tasks Found</h3>
               <p className={sidebarTextMuted}>
@@ -750,8 +755,8 @@ const Dashboard = () => {
           <div className="w-full max-w-2xl px-1">
             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-slate-950">{selectedTask.taskName}</h2>
-                <p className="mt-1 text-sm text-slate-500">
+                <h2 className="text-2xl font-bold text-white">{selectedTask.taskName}</h2>
+                <p className="mt-1 text-sm text-slate-400">
                   {selectedTask.dueDate ? `Deadline: ${new Date(selectedTask.dueDate).toLocaleString()}` : "No deadline set"}
                 </p>
               </div>
@@ -761,7 +766,7 @@ const Dashboard = () => {
                     setEditingTask(selectedTask);
                     setSelectedTask(null);
                   }}
-                  className="btn btn-sm border-0 bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
+                  className="btn btn-sm border-0 bg-[#2f66dd] text-white hover:bg-[#2456c2]"
                 >
                   Edit
                 </button>
@@ -776,13 +781,13 @@ const Dashboard = () => {
 
             <div className="space-y-4">
               <div>
-                <h3 className="mb-2 text-sm font-semibold text-slate-700">Status</h3>
+                <h3 className="mb-2 text-sm font-semibold text-gray-300">Status</h3>
                 <div className="flex flex-wrap gap-2">
                   {["Pending", "In Progress", "Completed"].map((status) => (
                     <button
                       key={status}
                       onClick={() => handleUpdateTask(selectedTask._id, { taskStatus: status })}
-                      className={`btn btn-sm rounded-2xl border-0 ${selectedTask.taskStatus === status ? "bg-[#2563eb] text-white hover:bg-[#1d4ed8]" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}
+                      className={`btn btn-sm ${selectedTask.taskStatus === status ? "btn-primary" : "btn-outline"}`}
                     >
                       {status}
                     </button>
@@ -791,25 +796,25 @@ const Dashboard = () => {
               </div>
 
               <div>
-                <h3 className="mb-2 text-sm font-semibold text-slate-700">Description</h3>
-                <p className="text-slate-600">{selectedTask.description || "No description"}</p>
+                <h3 className="mb-2 text-sm font-semibold text-gray-300">Description</h3>
+                <p className="text-gray-300">{selectedTask.description || "No description"}</p>
               </div>
 
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div>
-                  <h3 className="mb-2 text-sm font-semibold text-slate-700">Priority</h3>
-                  <span className={`badge border-0 ${
-                    selectedTask.priority === "High" ? "bg-sky-100 text-sky-700" :
-                    selectedTask.priority === "Medium" ? "bg-amber-100 text-amber-700" :
-                    "bg-slate-100 text-slate-700"
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">Priority</h3>
+                  <span className={`badge ${
+                    selectedTask.priority === "High" ? "badge-error" :
+                    selectedTask.priority === "Medium" ? "badge-warning" :
+                    "badge-success"
                   }`}>
                     {selectedTask.priority}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="mb-2 text-sm font-semibold text-slate-700">Category</h3>
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">Category</h3>
+                  <span className="rounded-full bg-white/8 px-3 py-1 text-sm text-slate-200">
                     {selectedTask.category || "General"}
                   </span>
                 </div>
@@ -817,10 +822,10 @@ const Dashboard = () => {
 
               {Array.isArray(selectedTask.tags) && selectedTask.tags.length > 0 ? (
                 <div>
-                  <h3 className="mb-2 text-sm font-semibold text-slate-700">Tags</h3>
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedTask.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-blue-50 px-3 py-1 text-sm text-[#1d4ed8]">
+                      <span key={tag} className="rounded-full bg-[#1e2e4a] px-3 py-1 text-sm text-[#a9c5ff]">
                         #{tag}
                       </span>
                     ))}
@@ -843,22 +848,22 @@ const Dashboard = () => {
               />
 
               <div>
-                <h3 className="mb-2 text-sm font-semibold text-slate-700">Activity History</h3>
-                <div className="max-h-56 space-y-3 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <h3 className="mb-2 text-sm font-semibold text-gray-300">Activity History</h3>
+                <div className="max-h-56 space-y-3 overflow-y-auto rounded-2xl border border-white/8 bg-white/5 p-4">
                   {selectedTask.activityHistory?.length ? (
                     [...selectedTask.activityHistory]
                       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                       .map((entry, index) => (
-                        <div key={`${entry.createdAt}-${index}`} className="border-b border-slate-200 pb-3 last:border-b-0 last:pb-0">
-                          <div className="text-sm font-medium text-slate-900">{entry.summary}</div>
-                          <div className="mt-1 text-xs text-slate-500">
+                        <div key={`${entry.createdAt}-${index}`} className="border-b border-white/6 pb-3 last:border-b-0 last:pb-0">
+                          <div className="text-sm font-medium text-white">{entry.summary}</div>
+                          <div className="mt-1 text-xs text-slate-400">
                             {new Date(entry.createdAt).toLocaleString()}
                           </div>
                           {entry.changes?.length ? (
                             <div className="mt-2 flex flex-wrap gap-2">
                               {entry.changes.map((change, changeIndex) => (
-                                <span key={`${change.field}-${changeIndex}`} className="rounded-full bg-white px-2 py-1 text-xs text-slate-600">
-                                  {change.field}: {String(change.oldValue ?? "empty")} {"->"} {String(change.newValue ?? "empty")}
+                                <span key={`${change.field}-${changeIndex}`} className="rounded-full bg-white/8 px-2 py-1 text-xs text-slate-300">
+                                  {change.field}: {String(change.oldValue ?? "empty")} → {String(change.newValue ?? "empty")}
                                 </span>
                               ))}
                             </div>
@@ -866,7 +871,7 @@ const Dashboard = () => {
                         </div>
                       ))
                   ) : (
-                    <div className="text-sm text-slate-500">No activity yet.</div>
+                    <div className="text-sm text-slate-400">No activity yet.</div>
                   )}
                 </div>
               </div>

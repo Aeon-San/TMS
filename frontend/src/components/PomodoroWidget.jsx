@@ -58,73 +58,67 @@ const PomodoroWidget = ({ darkMode, activeTaskName }) => {
   }, [mode, timeLeft]);
 
   const shellClass = darkMode
-    ? "rounded-[28px] border border-white/8 bg-white/5 p-5 shadow-sm"
-    : "rounded-[28px] border border-white/70 bg-white/80 p-5 shadow-sm";
-  const mutedText = darkMode ? "text-slate-400" : "text-slate-500";
-  const titleText = darkMode ? "text-white" : "text-slate-900";
+    ? "mx-auto w-full max-w-[220px] min-w-0 rounded-[26px] border border-white/10 bg-[#131d31] p-4 sm:max-w-[252px] sm:p-5 shadow-[0_14px_38px_rgba(0,0,0,0.34)]"
+    : "mx-auto w-full max-w-[220px] min-w-0 rounded-[26px] border border-[#d9e1ef] bg-[#eef2f8] p-4 sm:max-w-[252px] sm:p-5 shadow-[0_10px_30px_rgba(81,107,148,0.15)]";
+  const mutedText = darkMode ? "text-slate-400" : "text-[#6f7d91]";
+  const titleText = darkMode ? "text-white" : "text-[#0f2140]";
 
   return (
-    <div className={shellClass}>
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h3 className={`text-xl font-bold ${titleText}`}>Pomodoro Focus</h3>
-          <p className={`text-sm ${mutedText}`}>25 min focus, 5 min break to keep momentum high.</p>
-        </div>
-        <div className={darkMode ? "rounded-2xl bg-white/8 px-3 py-2 text-sm text-slate-300" : "rounded-2xl bg-blue-50 px-3 py-2 text-sm text-blue-700"}>
-          {sessionCount} sessions
-        </div>
+    <div className={`${shellClass} min-w-0`}>
+      <div className="mb-5 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-2.5 sm:gap-3">
+        <span className={`text-[11px] font-semibold uppercase tracking-[0.28em] sm:text-xs sm:tracking-[0.34em] ${mutedText}`}>
+          {mode === "focus" ? "Focus Session" : "Break Time"}
+        </span>
+        <span
+          className={`text-right text-xs leading-[1.35] break-words ${mutedText}`}
+          title={activeTaskName || ""}
+        >
+          {activeTaskName ? `Now focusing: ${activeTaskName}` : "Pick a task to focus"}
+        </span>
       </div>
 
-      <div className={darkMode ? "rounded-[24px] border border-white/8 bg-[#140f18] p-5" : "rounded-[24px] border border-slate-200 bg-slate-50 p-5"}>
-        <div className="mb-3 flex items-center justify-between">
-          <span className={`text-sm font-medium uppercase tracking-[0.24em] ${mutedText}`}>
-            {mode === "focus" ? "Focus Session" : "Break Time"}
-          </span>
-          <span className={`text-sm ${mutedText}`}>
-            {activeTaskName ? `Now focusing: ${activeTaskName}` : "Pick a task to focus"}
-          </span>
-        </div>
-
-        <div className={`mb-4 text-center text-5xl font-black ${titleText}`}>
-          {formatTime(timeLeft)}
-        </div>
-
-        <div className={darkMode ? "mb-5 h-3 rounded-full bg-white/8" : "mb-5 h-3 rounded-full bg-slate-200"}>
-          <div
-            className="h-full rounded-full bg-[linear-gradient(90deg,#93c5fd_0%,#2563eb_100%)] transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => setIsRunning((prev) => !prev)}
-            className="rounded-2xl bg-[#2563eb] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(37,99,235,0.28)] transition hover:bg-[#1d4ed8]"
-          >
-            {isRunning ? "Pause" : "Start"}
-          </button>
-          <button
-            type="button"
-            onClick={resetTimer}
-            className={darkMode ? "rounded-2xl bg-white/8 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/12" : "rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200"}
-          >
-            Reset
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const nextMode = mode === "focus" ? "break" : "focus";
-              setMode(nextMode);
-              setIsRunning(false);
-              setTimeLeft(nextMode === "focus" ? WORK_DURATION : BREAK_DURATION);
-            }}
-            className={darkMode ? "rounded-2xl bg-white/8 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/12" : "rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200"}
-          >
-            Switch to {mode === "focus" ? "Break" : "Focus"}
-          </button>
-        </div>
+      <div className={`mb-5 text-center text-[clamp(2rem,14vw,3.15rem)] font-black leading-none tracking-tight tabular-nums whitespace-nowrap ${titleText}`}>
+        {formatTime(timeLeft)}
       </div>
+
+      <div className={darkMode ? "mx-auto mb-6 h-3 w-full max-w-[150px] rounded-full bg-white/10" : "mx-auto mb-6 h-3 w-full max-w-[150px] rounded-full bg-[#d8dee8]"}>
+        <div
+          className="h-full rounded-full bg-[linear-gradient(90deg,#86a8ff_0%,#2f66dd_100%)] transition-all duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <div className="mx-auto flex w-full max-w-[150px] min-w-0 flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => setIsRunning((prev) => !prev)}
+          className="w-full rounded-[16px] bg-[#2f66dd] px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_25px_rgba(47,102,221,0.3)] transition hover:bg-[#2456c2]"
+        >
+          {isRunning ? "Pause" : "Start"}
+        </button>
+        <button
+          type="button"
+          onClick={resetTimer}
+          className={darkMode ? "w-full rounded-[16px] bg-white/10 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/15" : "w-full rounded-[16px] bg-[#e9edf3] px-4 py-3 text-sm font-semibold text-[#334155] hover:bg-[#dce4ef]"}
+        >
+          Reset
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            const nextMode = mode === "focus" ? "break" : "focus";
+            setMode(nextMode);
+            setIsRunning(false);
+            setTimeLeft(nextMode === "focus" ? WORK_DURATION : BREAK_DURATION);
+          }}
+          className={darkMode ? "w-full rounded-[16px] bg-white/10 px-2 py-3 text-sm font-semibold text-slate-200 hover:bg-white/15" : "w-full rounded-[16px] bg-[#e9edf3] px-2 py-3 text-sm font-semibold text-[#334155] hover:bg-[#dce4ef]"}
+        >
+          <span className="hidden sm:inline">Switch to {mode === "focus" ? "Break" : "Focus"}</span>
+          <span className="sm:hidden">{mode === "focus" ? "Break" : "Focus"}</span>
+        </button>
+      </div>
+
+      <p className={`mt-4 text-center text-xs ${mutedText}`}>{sessionCount} sessions</p>
     </div>
   );
 };

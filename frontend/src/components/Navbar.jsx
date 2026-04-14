@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
     <div className='flex flex-row w-screen text-2xl m-3 justify-around items-center overflow-hidden'>
         <div className='max-w-[300px] m-3'>
-        <Link to="/home">
+        <Link to="/">
         <SubmitButton value={"Home"}/>
         </Link>
         </div>

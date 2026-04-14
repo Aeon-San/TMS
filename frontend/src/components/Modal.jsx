@@ -82,25 +82,22 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[rgba(15,23,42,0.25)] px-4 py-8 backdrop-blur-md">
-      <div className="relative w-full max-w-2xl rounded-[28px] border border-white/80 bg-white p-6 text-slate-900 shadow-[0_24px_80px_rgba(15,23,42,0.18)] max-h-[calc(100vh-4rem)] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(22,17,26,0.42)] px-4 backdrop-blur-md">
+      <div className="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-[28px] border border-white/10 bg-[#17131c] p-6 text-white shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
         <button
           onClick={onClose}
-          className="absolute right-4 top-3 text-2xl text-slate-500 transition hover:text-slate-900"
+          className="absolute right-4 top-3 text-2xl text-white/80 transition hover:text-white"
         >
-          x
+          ×
         </button>
 
-        <h2 className="mb-2 text-2xl font-bold text-slate-950">
+        <h2 className="mb-6 text-2xl font-bold">
           {isUpdate ? "Edit Task" : "Add New Task"}
         </h2>
-        <p className="mb-6 text-sm text-slate-500">
-          Keep the card clean and actionable so it feels at home in the new dashboard theme.
-        </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label className="mb-1 block text-sm font-medium text-slate-200">
               Task Name
             </label>
             <input
@@ -111,16 +108,16 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
                   message: "Task title must be at least 3 characters",
                 },
               })}
-              className="w-full rounded-2xl border border-slate-200 bg-[#fff8fa] p-3 text-slate-900 outline-none transition focus:border-[#ff7b86] focus:ring-4 focus:ring-rose-100"
+              className="w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-white outline-none transition focus:border-[#ff7b86]"
               placeholder="Enter task name"
             />
             {errors.taskName && (
-              <p className="mt-1 text-sm text-rose-500">{errors.taskName.message}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.taskName.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label className="mb-1 block text-sm font-medium text-slate-200">
               Description
             </label>
             <textarea
@@ -130,23 +127,23 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
                   message: "Description must be under 500 characters",
                 },
               })}
-              className="w-full resize-none rounded-2xl border border-slate-200 bg-[#fff8fa] p-3 text-slate-900 outline-none transition focus:border-[#ff7b86] focus:ring-4 focus:ring-rose-100"
+              className="w-full resize-none rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-white outline-none transition focus:border-[#ff7b86]"
               placeholder="Enter task description"
               rows="4"
             />
             {errors.description && (
-              <p className="mt-1 text-sm text-rose-500">{errors.description.message}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.description.message}</p>
             )}
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
+              <label className="mb-1 block text-sm font-medium text-slate-200">
                 Priority
               </label>
               <select
                 {...register("priority")}
-                className="w-full rounded-2xl border border-slate-200 bg-[#fff8fa] p-3 text-slate-900 outline-none transition focus:border-[#ff7b86] focus:ring-4 focus:ring-rose-100"
+                className="w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-white outline-none transition focus:border-[#ff7b86]"
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -155,12 +152,12 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
+              <label className="mb-1 block text-sm font-medium text-slate-200">
                 Status
               </label>
               <select
                 {...register("taskStatus")}
-                className="w-full rounded-2xl border border-slate-200 bg-[#fff8fa] p-3 text-slate-900 outline-none transition focus:border-[#ff7b86] focus:ring-4 focus:ring-rose-100"
+                className="w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-white outline-none transition focus:border-[#ff7b86]"
               >
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
@@ -170,12 +167,12 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label className="mb-1 block text-sm font-medium text-slate-200">
               Tags
             </label>
             <input
               {...register("tags")}
-              className="w-full rounded-2xl border border-slate-200 bg-[#fff8fa] p-3 text-slate-900 outline-none transition focus:border-[#ff7b86] focus:ring-4 focus:ring-rose-100"
+              className="w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-white outline-none transition focus:border-[#ff7b86]"
               placeholder="e.g. frontend, urgent, sprint-1"
             />
             <p className="mt-1 text-xs text-slate-500">Separate tags with commas.</p>
@@ -183,18 +180,18 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
+              <label className="mb-1 block text-sm font-medium text-slate-200">
                 Category
               </label>
               <input
                 {...register("category")}
-                className="w-full rounded-2xl border border-slate-200 bg-[#fff8fa] p-3 text-slate-900 outline-none transition focus:border-[#ff7b86] focus:ring-4 focus:ring-rose-100"
+                className="w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-white outline-none transition focus:border-[#ff7b86]"
                 placeholder="e.g. Product, Design, Personal"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
+              <label className="mb-1 block text-sm font-medium text-slate-200">
                 Deadline
               </label>
               <Controller
@@ -208,7 +205,7 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
                     timeIntervals={15}
                     dateFormat="MMM d, yyyy h:mm aa"
                     placeholderText="Select deadline"
-                    className="w-full rounded-2xl border border-slate-200 bg-[#fff8fa] p-3 text-slate-900 outline-none transition focus:border-[#ff7b86] focus:ring-4 focus:ring-rose-100"
+                    className="w-full rounded-2xl border border-white/10 bg-[#1d1723] p-3 text-white outline-none transition focus:border-[#ff7b86]"
                     wrapperClassName="w-full"
                     isClearable
                   />
@@ -218,7 +215,7 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
           </div>
 
           {isUpdate && taskData ? (
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
               <div>Created: {new Date(taskData.createdAt).toLocaleString()}</div>
               {taskData.updatedAt !== taskData.createdAt ? (
                 <div className="mt-1">Last Updated: {new Date(taskData.updatedAt).toLocaleString()}</div>
@@ -230,7 +227,7 @@ const Modal = ({ isOpen, onClose, taskData, isUpdate, reload }) => {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-2xl bg-slate-100 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
+              className="rounded-2xl bg-white/8 px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-white/12"
             >
               Cancel
             </button>

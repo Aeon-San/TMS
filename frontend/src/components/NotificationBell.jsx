@@ -98,6 +98,10 @@ const NotificationBell = ({ darkMode, compact = false }) => {
         return 'Status';
       case 'task_comment_added':
         return 'Comment';
+      case 'task_attachment_added':
+        return 'File';
+      case 'deadline_reminder':
+        return 'Reminder';
       case 'board_invitation':
         return 'Invite';
       case 'board_member_joined':
@@ -123,8 +127,8 @@ const NotificationBell = ({ darkMode, compact = false }) => {
       <button
         onClick={handleBellClick}
         className={darkMode
-          ? `relative ${compact ? "rounded-2xl px-4 py-3" : "btn btn-circle"} border border-white/10 bg-white/6 text-slate-100 hover:bg-white/10`
-          : `relative ${compact ? "rounded-2xl px-4 py-3" : "btn btn-circle"} border border-[#f1d1d8] bg-white/80 text-slate-700 hover:bg-[#fff3f6]`}
+          ? `relative ${compact ? "rounded-2xl px-3 py-3 sm:px-4" : "btn btn-circle"} border border-white/10 bg-white/6 text-slate-100 hover:bg-white/10`
+          : `relative ${compact ? "rounded-2xl px-3 py-3 sm:px-4" : "btn btn-circle"} border border-[#f1d1d8] bg-white/80 text-slate-700 hover:bg-[#fff3f6]`}
       >
         <div className="flex items-center gap-2">
           <FaBell className="h-5 w-5" />
@@ -139,14 +143,14 @@ const NotificationBell = ({ darkMode, compact = false }) => {
 
       {showDropdown && (
         <div className={darkMode
-          ? "fixed left-3 right-3 top-20 z-50 max-h-[70vh] overflow-hidden rounded-[24px] border border-white/10 bg-[#15111a] shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:absolute sm:left-auto sm:right-0 sm:top-14 sm:max-h-96 sm:w-80"
-          : "fixed left-3 right-3 top-20 z-50 max-h-[70vh] overflow-hidden rounded-[24px] border border-[#f1d1d8] bg-white shadow-[0_20px_60px_rgba(163,82,104,0.18)] sm:absolute sm:left-auto sm:right-0 sm:top-14 sm:max-h-96 sm:w-80"}>
+          ? "fixed left-2 right-2 top-20 z-50 max-h-[75vh] overflow-hidden rounded-[20px] border border-white/10 bg-[#15111a] shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:absolute sm:left-auto sm:right-0 sm:top-14 sm:max-h-96 sm:w-80 sm:rounded-[24px]"
+          : "fixed left-2 right-2 top-20 z-50 max-h-[75vh] overflow-hidden rounded-[20px] border border-[#f1d1d8] bg-white shadow-[0_20px_60px_rgba(163,82,104,0.18)] sm:absolute sm:left-auto sm:right-0 sm:top-14 sm:max-h-96 sm:w-80 sm:rounded-[24px]"}>
           <div className={darkMode ? "flex items-center justify-between border-b border-white/8 p-3" : "flex items-center justify-between border-b border-[#f6d8df] p-3"}>
             <h3 className={darkMode ? "font-semibold text-white" : "font-semibold text-slate-900"}>Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className={darkMode ? "btn btn-xs border-0 bg-white/8 text-slate-200 hover:bg-white/12" : "btn btn-xs border-0 bg-[#fff3f6] text-slate-700 hover:bg-[#ffe8ee]"}
+                className={darkMode ? "btn btn-sm border-0 bg-white/8 text-slate-200 hover:bg-white/12 sm:btn-xs" : "btn btn-sm border-0 bg-[#fff3f6] text-slate-700 hover:bg-[#ffe8ee] sm:btn-xs"}
               >
                 Mark all read
               </button>

@@ -1,6 +1,325 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+:root {
+  --tf-bg: #0f1324;
+  --tf-surface: #090d18;
+  --tf-surface-low: #141a2f;
+  --tf-surface-mid: #181f38;
+  --tf-surface-high: #232c4d;
+  --tf-text: #e8edff;
+  --tf-text-muted: #aeb9de;
+  --tf-text-subtle: #8392c2;
+  --tf-border: rgba(150, 170, 230, 0.2);
+  --tf-border-hover: rgba(150, 170, 230, 0.38);
+  --tf-primary: #8ea3ff;
+  --tf-shadow-card: 0 18px 44px rgba(0, 0, 0, 0.28);
+  --tf-shadow-elevated: 0 24px 60px rgba(0, 0, 0, 0.32);
+  --tf-glow-sm: 0 0 0 1px rgba(110, 132, 255, 0.12), 0 14px 36px rgba(91, 120, 255, 0.16);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: auto;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+  background: linear-gradient(180deg, #edf4ff 0%, #f8fbff 52%, #e7f0ff 100%);
+  color: #0f172a;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.orb-indigo {
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.42), rgba(99, 102, 241, 0));
+}
+
+.orb-violet {
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.34), rgba(139, 92, 246, 0));
+}
+
+.orb-cyan {
+  background: radial-gradient(circle at center, rgba(76, 215, 246, 0.28), rgba(76, 215, 246, 0));
+}
+
+.btn-glow {
+  background: linear-gradient(135deg, #6366f1, #4f7cff);
+  box-shadow: 0 14px 34px rgba(79, 124, 255, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-glow:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 38px rgba(79, 124, 255, 0.4);
+  filter: brightness(1.02);
+}
+
+.tf-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(142, 163, 255, 0.25);
+  border-top-color: #7b95ff;
+  border-radius: 9999px;
+  animation: spin 0.85s linear infinite;
+}
+
+.tf-card-interactive {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.tf-card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+}
+
+.focus-beam {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(129, 140, 248, 0.72), transparent);
+}
+
+.animate-float {
+  animation: floatY 5.4s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.62s ease both;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3.2s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.45s ease both;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.55s ease both;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.55s ease both;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.46; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes mobileLiftIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes mobilePopIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tapBounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.95); }
+  70% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.mobile-anim-in {
+  animation: mobileLiftIn 0.42s ease both;
+}
+
+.mobile-anim-pop {
+  animation: mobilePopIn 0.34s ease both;
+}
+
+.mobile-anim-delay-1 { animation-delay: 0.06s; }
+.mobile-anim-delay-2 { animation-delay: 0.12s; }
+.mobile-anim-delay-3 { animation-delay: 0.18s; }
+
+.tap-bounce {
+  transform-origin: center;
+}
+
+.tap-bounce:active {
+  animation: tapBounce 0.24s ease;
+}
+
+.press-micro {
+  transition: transform 0.16s ease, filter 0.16s ease;
+}
+
+.press-micro:active {
+  transform: scale(0.97);
+  filter: brightness(0.98);
+}
+
+.sidebar-slide {
+  transition: transform 0.3s ease, opacity 0.24s ease;
+}
+
+.sidebar-slide-hidden {
+  transform: translateX(-104%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-slide-open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.profile-main-grid {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+}
+
+.profile-tab-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+}
+
+.profile-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.task-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+}
+
+.task-scroll-area.task-scroll-dark {
+  scrollbar-color: rgba(123, 147, 198, 0.55) rgba(255, 255, 255, 0.06);
+}
+
+.task-scroll-area.task-scroll-light {
+  scrollbar-color: rgba(93, 122, 176, 0.65) rgba(206, 220, 244, 0.65);
+}
+
+.task-scroll-area::-webkit-scrollbar {
+  width: 9px;
+}
+
+.task-scroll-area::-webkit-scrollbar-track {
+  border-radius: 999px;
+}
+
+.task-scroll-area.task-scroll-dark::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.task-scroll-area.task-scroll-light::-webkit-scrollbar-track {
+  background: rgba(206, 220, 244, 0.65);
+}
+
+.task-scroll-area::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.task-scroll-area.task-scroll-dark::-webkit-scrollbar-thumb {
+  background: rgba(123, 147, 198, 0.72);
+}
+
+.task-scroll-area.task-scroll-light::-webkit-scrollbar-thumb {
+  background: rgba(93, 122, 176, 0.75);
+}
+
+.task-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(47, 102, 221, 0.9);
+}
+
+@media (max-width: 1100px) {
+  .profile-main-grid,
+  .profile-tab-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+
+  .profile-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .mobile-scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .mobile-scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-anim-in,
+  .mobile-anim-pop {
+    will-change: transform, opacity;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-anim-in,
+  .mobile-anim-pop,
+  .mobile-anim-delay-1,
+  .mobile-anim-delay-2,
+  .mobile-anim-delay-3,
+  .tap-bounce:active,
+  .press-micro,
+  .sidebar-slide {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@import "tailwindcss";
+@plugin "daisyui";
+
 body {
     overflow: auto;
     -webkit-tap-highlight-color: transparent;

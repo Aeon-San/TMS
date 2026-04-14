@@ -5,22 +5,9 @@ import API from '../library/api.js';
 import taskApi from '../library/taskApi.js';
 import toast from 'react-hot-toast';
 import {
-  ArrowLeft,
-  Bell,
-  Camera,
-  CheckCircle2,
-  Clock3,
-  KeyRound,
-  LayoutGrid,
-  LoaderCircle,
-  Mail,
-  Moon,
-  Save,
-  Shield,
-  Sparkles,
-  SunMedium,
-  Trash2,
-  User,
+  ArrowLeft, Bell, Camera, CheckCircle2, Clock3, KeyRound,
+  LayoutGrid, LoaderCircle, Mail, Moon, Save, Shield,
+  Sparkles, SunMedium, Trash2, User,
 } from 'lucide-react';
 
 const TABS = ['Profile', 'Activity', 'Settings'];
@@ -33,565 +20,599 @@ const emptyPreferences = {
   productUpdates: false,
 };
 
-const inputClass = (darkMode) =>
-  darkMode
-    ? 'w-full rounded-2xl border border-white/10 bg-[#1d1723] px-4 py-3 text-slate-100 outline-none'
-    : 'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 outline-none';
-
-const cardClass = (darkMode) =>
-  darkMode ? 'border border-white/8 bg-white/6' : 'border border-white/70 bg-white/90';
-
-const softCardClass = (darkMode) =>
-  darkMode ? 'bg-white/6' : 'bg-[#fff7f8]';
+/* ─── Style helpers ─── */
+const card  = (dm) => ({
+  background: dm ? 'var(--tf-surface-mid)' : '#fff',
+  border: `1px solid ${dm ? 'var(--tf-border)' : 'rgba(99,102,241,0.1)'}`,
+  borderRadius: 20, padding: 20,
+  boxShadow: dm ? 'var(--tf-shadow-card)' : '0 4px 20px rgba(99,102,241,0.06)',
+});
+const input = (dm) => ({
+  width: '100%', padding: '11px 14px', borderRadius: 12, fontSize: 14,
+  background: dm ? 'var(--tf-bg)' : '#f5f5ff',
+  border: `1px solid ${dm ? 'var(--tf-border)' : 'rgba(99,102,241,0.15)'}`,
+  color: dm ? 'var(--tf-text)' : '#1a1a2e', outline: 'none', fontFamily: 'inherit',
+  transition: 'border-color 0.2s, box-shadow 0.2s',
+});
+const label = (dm) => ({
+  fontSize: 12, fontWeight: 600, marginBottom: 6, display: 'block',
+  color: dm ? 'var(--tf-text-muted)' : '#6060a0',
+});
+const softCard = (dm) => ({
+  background: dm ? 'rgba(99,102,241,0.06)' : '#f5f5ff',
+  border: `1px solid ${dm ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.1)'}`,
+  borderRadius: 14, padding: 14,
+});
 
 const Profile = () => {
   const { user, logout, refreshUser, setUser } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [tasksLoading, setTasksLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState('Profile');
-  const [tasks, setTasks] = useState([]);
-  const [profileForm, setProfileForm] = useState({ name: '', email: '', username: '' });
-  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [preferences, setPreferences] = useState(emptyPreferences);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [publicId, setPublicId] = useState(null);
-  const [avatar, setAvatar] = useState(null);
+  const [loading,       setLoading]        = useState(true);
+  const [tasksLoading,  setTasksLoading]   = useState(true);
+  const [submitting,    setSubmitting]      = useState(false);
+  const [activeTab,     setActiveTab]       = useState('Profile');
+  const [tasks,         setTasks]           = useState([]);
+  const [profileForm,   setProfileForm]     = useState({ name: '', email: '', username: '' });
+  const [passwordForm,  setPasswordForm]    = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [preferences,   setPreferences]     = useState(emptyPreferences);
+  const [imageUrl,      setImageUrl]        = useState(null);
+  const [publicId,      setPublicId]        = useState(null);
+  const [avatar,        setAvatar]          = useState(null);
+  const [isCompact,     setIsCompact]       = useState(() => window.innerWidth < 640);
+
+  const darkMode     = preferences.darkMode;
+  const displayImage = imageUrl || avatar || '/image/user.png';
+
+  /* ─── Dark/light theme vars ─── */
+  const wrapStyle = darkMode
+    ? { minHeight: '100vh', background: 'var(--tf-surface)', color: 'var(--tf-text)', paddingBottom: 48 }
+    : { minHeight: '100vh', background: '#f0f0ff', color: '#1a1a2e', paddingBottom: 48 };
 
   useEffect(() => {
     const bootstrap = async () => {
       try {
-        const currentUser = await refreshUser();
-        setProfileForm({
-          name: currentUser.name || '',
-          email: currentUser.email || '',
-          username: currentUser.username || '',
-        });
-        setPreferences({ ...emptyPreferences, ...currentUser.preferences });
-        setImageUrl(currentUser.profilePic || null);
-        setAvatar(currentUser.avatar || null);
-        setPublicId(currentUser.profilePicPublicId || null);
-      } catch (error) {
-        navigate('/login');
-      } finally {
-        setLoading(false);
-      }
+        const cu = await refreshUser();
+        setProfileForm({ name: cu.name || '', email: cu.email || '', username: cu.username || '' });
+        setPreferences({ ...emptyPreferences, ...cu.preferences });
+        setImageUrl(cu.profilePic || null);
+        setAvatar(cu.avatar || null);
+        setPublicId(cu.profilePicPublicId || null);
+      } catch { navigate('/login'); }
+      finally { setLoading(false); }
     };
-
     bootstrap();
   }, [navigate, refreshUser]);
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    (async () => {
       try {
         setTasksLoading(true);
-        const response = await taskApi.get('/', { params: { limit: 100, sortBy: 'newest' } });
-        setTasks(Array.isArray(response.data) ? response.data : response.data.tasks || []);
-      } catch (error) {
-        toast.error('Unable to load profile activity.');
-      } finally {
-        setTasksLoading(false);
-      }
-    };
-
-    fetchTasks();
+        const r = await taskApi.get('/', { params: { limit: 100, sortBy: 'newest' } });
+        setTasks(Array.isArray(r.data) ? r.data : r.data.tasks || []);
+      } catch { toast.error('Unable to load profile activity.'); }
+      finally { setTasksLoading(false); }
+    })();
   }, []);
 
-  const normalizeDate = (value) => {
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? null : date;
-  };
+  useEffect(() => {
+    const onResize = () => setIsCompact(window.innerWidth < 640);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const normalizeDate = (v) => { const d = new Date(v); return Number.isNaN(d.getTime()) ? null : d; };
 
   const stats = useMemo(() => {
-    const total = tasks.length;
-    const completed = tasks.filter((task) => task.taskStatus === 'Completed').length;
-    const pending = tasks.filter((task) => task.taskStatus === 'Pending').length;
-    const inProgress = tasks.filter((task) => task.taskStatus === 'In Progress').length;
+    const total       = tasks.length;
+    const completed   = tasks.filter((t) => t.taskStatus === 'Completed').length;
+    const pending     = tasks.filter((t) => t.taskStatus === 'Pending').length;
+    const inProgress  = tasks.filter((t) => t.taskStatus === 'In Progress').length;
     const completionRate = total ? Math.round((completed / total) * 100) : 0;
-    const overdue = tasks.filter((task) => {
-      const due = normalizeDate(task.dueDate);
-      return due && due < new Date() && task.taskStatus !== 'Completed';
-    }).length;
+    const overdue = tasks.filter((t) => { const d = normalizeDate(t.dueDate); return d && d < new Date() && t.taskStatus !== 'Completed'; }).length;
     return { total, completed, pending, inProgress, completionRate, overdue };
   }, [tasks]);
 
-  const recentTasks = useMemo(
-    () => [...tasks].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 5),
-    [tasks]
-  );
-
-  const recentCompletedTasks = useMemo(
-    () =>
-      tasks
-        .filter((task) => task.taskStatus === 'Completed')
-        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-        .slice(0, 4),
-    [tasks]
-  );
-
-  const activityTimeline = useMemo(() => {
-    const entries = tasks.flatMap((task) =>
-      (task.activityHistory || []).map((entry) => ({
-        ...entry,
-        taskId: task._id,
-        taskName: task.taskName,
-      }))
-    );
+  const recentTasks          = useMemo(() => [...tasks].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 5), [tasks]);
+  const recentCompletedTasks = useMemo(() => tasks.filter((t) => t.taskStatus === 'Completed').sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 4), [tasks]);
+  const activityTimeline     = useMemo(() => {
+    const entries = tasks.flatMap((t) => (t.activityHistory || []).map((e) => ({ ...e, taskId: t._id, taskName: t.taskName })));
     return entries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 8);
   }, [tasks]);
 
   const productivityInsight = useMemo(() => {
-    if (!stats.total) return 'Start by creating a few tasks. Your productivity snapshot will begin filling in automatically.';
-    if (stats.completionRate >= 75) return 'You are in a strong execution rhythm. Most tasks are closing on time and the completion rate looks excellent.';
-    if (stats.overdue > 0) return `${stats.overdue} overdue task${stats.overdue > 1 ? 's are' : ' is'} pulling your momentum down. Clearing those first will help quickly.`;
-    return 'Your workspace looks active. A few focused sessions should push more work into the completed column.';
+    if (!stats.total) return 'Start by creating tasks. Your productivity snapshot will fill in automatically.';
+    if (stats.completionRate >= 75) return 'Excellent execution rhythm! Most tasks are closing on time.';
+    if (stats.overdue > 0) return `${stats.overdue} overdue task${stats.overdue > 1 ? 's are' : ' is'} pulling momentum down. Clear those first.`;
+    return 'Your workspace looks active. A few focused sessions will push more work to completed.';
   }, [stats]);
 
-  const displayImage = imageUrl || avatar || '/image/user.png';
-  const darkMode = preferences.darkMode;
-
-  const handleProfileInput = (event) => {
-    const { name, value } = event.target;
-    setProfileForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePasswordInput = (event) => {
-    const { name, value } = event.target;
-    setPasswordForm((prev) => ({ ...prev, [name]: value }));
-  };
+  /* ─── Handlers ─── */
+  const handleProfileInput  = (e) => setProfileForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  const handlePasswordInput = (e) => setPasswordForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const handlePreferenceToggle = async (key) => {
-    const previousPreferences = preferences;
-    const nextPreferences = { ...preferences, [key]: !preferences[key] };
-    setPreferences(nextPreferences);
-    try {
-      const { data } = await API.patch('/profile', { preferences: nextPreferences });
-      setUser(data.user);
-    } catch (error) {
-      setPreferences(previousPreferences);
-      toast.error(error.response?.data?.message || 'Unable to update settings.');
-    }
+    const prev = preferences;
+    const next = { ...preferences, [key]: !preferences[key] };
+    setPreferences(next);
+    try { const { data } = await API.patch('/profile', { preferences: next }); setUser(data.user); }
+    catch (err) { setPreferences(prev); toast.error(err.response?.data?.message || 'Unable to update.'); }
   };
 
-  const handleSaveProfile = async (event) => {
-    event.preventDefault();
-    setSubmitting(true);
+  const handleSaveProfile = async (e) => {
+    e.preventDefault(); setSubmitting(true);
     try {
       const { data } = await API.patch('/profile', profileForm);
       setUser(data.user);
-      setProfileForm({
-        name: data.user.name || '',
-        email: data.user.email || '',
-        username: data.user.username || '',
-      });
+      setProfileForm({ name: data.user.name || '', email: data.user.email || '', username: data.user.username || '' });
       setPreferences({ ...emptyPreferences, ...data.user.preferences });
-      toast.success('Profile updated successfully!');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Unable to update profile.');
-    } finally {
-      setSubmitting(false);
-    }
+      toast.success('Profile updated!');
+    } catch (err) { toast.error(err.response?.data?.message || 'Unable to update.'); }
+    finally { setSubmitting(false); }
   };
 
-  const handleChangePassword = async (event) => {
-    event.preventDefault();
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      toast.error('New password and confirm password must match.');
-      return;
-    }
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) { toast.error('Passwords do not match.'); return; }
     setSubmitting(true);
     try {
-      const { data } = await API.post('/change-password', {
-        currentPassword: passwordForm.currentPassword,
-        newPassword: passwordForm.newPassword,
-      });
+      const { data } = await API.post('/change-password', { currentPassword: passwordForm.currentPassword, newPassword: passwordForm.newPassword });
       toast.success(data.message);
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Unable to change password.');
-    } finally {
-      setSubmitting(false);
-    }
+      await logout(); navigate('/login');
+    } catch (err) { toast.error(err.response?.data?.message || 'Unable to change password.'); }
+    finally { setSubmitting(false); }
   };
 
-  const handleFileChange = async (event) => {
-    const selectedFile = event.target.files?.[0];
-    if (!selectedFile) return;
-
-    const formData = new FormData();
-    formData.append('profilePic', selectedFile);
-
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0]; if (!file) return;
+    const fd = new FormData(); fd.append('profilePic', file);
     try {
-      const { data } = await API.post('/profilepic', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      setImageUrl(data.url);
-      setPublicId(data.publicId);
-      await refreshUser();
-      toast.success('Profile picture updated!');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Upload failed.');
-    }
+      const { data } = await API.post('/profilepic', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+      setImageUrl(data.url); setPublicId(data.publicId);
+      await refreshUser(); toast.success('Profile picture updated!');
+    } catch (err) { toast.error(err.response?.data?.message || 'Upload failed.'); }
   };
 
   const handleDeleteProfilePic = async () => {
     if (!publicId || !window.confirm('Delete your profile picture?')) return;
-    try {
-      await API.delete('/profilepic');
-      setImageUrl(null);
-      setPublicId(null);
-      await refreshUser();
-      toast.success('Profile picture removed.');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Unable to delete profile picture.');
-    }
+    try { await API.delete('/profilepic'); setImageUrl(null); setPublicId(null); await refreshUser(); toast.success('Removed.'); }
+    catch (err) { toast.error(err.response?.data?.message || 'Unable to delete.'); }
   };
 
   const handleDeleteAccount = async () => {
-    if (!window.confirm('Are you sure you want to permanently delete your account?')) return;
-    try {
-      await API.delete('/delete-account');
-      toast.success('Account deleted.');
-      navigate('/login');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Unable to delete account.');
-    }
+    if (!window.confirm('Permanently delete your account? This cannot be undone.')) return;
+    try { await API.delete('/delete-account'); toast.success('Account deleted.'); navigate('/login'); }
+    catch (err) { toast.error(err.response?.data?.message || 'Unable to delete account.'); }
   };
 
+  /* ─── Loading ─── */
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="rounded-[28px] border border-slate-200 bg-white p-8 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
-          <LoaderCircle className="h-10 w-10 animate-spin text-[#2563eb]" />
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--tf-surface)' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div className="tf-spinner" style={{ margin: '0 auto 12px' }} />
+          <p style={{ fontSize: 14, color: 'var(--tf-text-muted)' }}>Loading profile…</p>
         </div>
       </div>
     );
   }
 
+  /* ─── Shared input focus handler ─── */
+  const onFocus = (e) => { e.target.style.borderColor = 'rgba(99,102,241,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(99,102,241,0.12)'; };
+  const onBlur  = (e) => { e.target.style.borderColor = darkMode ? 'var(--tf-border)' : 'rgba(99,102,241,0.15)'; e.target.style.boxShadow = 'none'; };
+
   return (
-    <div className={`min-h-screen pb-8 ${darkMode ? 'bg-[radial-gradient(circle_at_top,#2d1e33_0%,#16121b_42%,#0c0a10_100%)] text-slate-100' : 'bg-white text-slate-900'}`}>
-        <div className="mx-auto max-w-[1450px] px-3 py-4 sm:px-4 sm:py-6 lg:px-6">
-        <div className={`mb-4 rounded-[24px] p-4 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:mb-6 sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-slate-200 bg-white'}`}>
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-start gap-4">
-              <Link to="/dashboard" className={darkMode ? 'inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/8 text-slate-100 transition hover:bg-white/12' : 'inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-slate-700 transition hover:bg-blue-100'}>
-                <ArrowLeft className="h-5 w-5" />
-              </Link>
-              <div>
-                <p className={`text-xs uppercase tracking-[0.28em] ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>User Profile</p>
-                <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Your Workspace Identity</h1>
-                <p className={`mt-2 max-w-2xl ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Manage your profile, tighten account security, and track your personal productivity in one place.</p>
-              </div>
+    <div style={wrapStyle} className={`relative overflow-hidden ${darkMode ? '' : 'light-mode'}`}>
+      <div className="orb orb-indigo absolute -left-12 top-6 h-52 w-52 opacity-70" />
+      <div className="orb orb-violet absolute right-4 top-24 h-60 w-60 opacity-60" />
+      <div className="orb orb-cyan absolute bottom-0 left-1/3 h-52 w-52 opacity-50" />
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '20px 20px' }} className="relative z-10">
+
+        {/* ─── Header Bar ─── */}
+        <div style={{ ...card(darkMode), display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <Link to="/dashboard" style={{
+              width: 40, height: 40, borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: darkMode ? 'rgba(99,102,241,0.1)' : '#eef0ff',
+              border: `1px solid ${darkMode ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.15)'}`,
+              color: darkMode ? '#818cf8' : '#6366f1', textDecoration: 'none', transition: 'all 0.2s',
+            }}><ArrowLeft size={18} /></Link>
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: darkMode ? 'var(--tf-text-subtle)' : '#8080a0', marginBottom: 2 }}>User Profile</div>
+              <h1 style={{ fontSize: 'clamp(18px,3vw,24px)', fontWeight: 900, letterSpacing: '-0.03em' }}>Your Workspace Identity</h1>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <button type="button" onClick={() => handlePreferenceToggle('darkMode')} className={darkMode ? 'btn rounded-2xl border-0 bg-white/8 text-slate-100 hover:bg-white/12' : 'btn rounded-2xl border-0 bg-white text-slate-700 hover:bg-[#fff7f8]'}>
-                {darkMode ? <SunMedium className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
-                {darkMode ? 'Light Mode' : 'Dark Mode'}
-              </button>
-              <button type="button" onClick={logout} className="btn rounded-2xl border-0 bg-slate-900 text-white hover:bg-slate-800">Logout</button>
-            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button
+              onClick={() => handlePreferenceToggle('darkMode')}
+              style={{
+                padding: '8px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600, border: `1px solid var(--tf-border)`,
+                background: darkMode ? 'rgba(255,255,255,0.06)' : '#eef0ff', cursor: 'pointer',
+                color: darkMode ? 'var(--tf-text-muted)' : '#6060a0', display: 'flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              {darkMode ? <SunMedium size={14} /> : <Moon size={14} />}
+              {darkMode ? 'Light Mode' : 'Dark Mode'}
+            </button>
+            <button
+              onClick={async () => { await logout(); navigate('/'); }}
+              style={{
+                padding: '8px 16px', borderRadius: 10, fontSize: 13, fontWeight: 700,
+                background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: 'white',
+                border: 'none', cursor: 'pointer',
+              }}
+            >Logout</button>
           </div>
         </div>
 
-        <div className="grid gap-4 sm:gap-6 xl:grid-cols-[0.92fr_1.08fr]">
-          <aside className={`rounded-[24px] p-4 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-slate-200 bg-white'}`}>
-            <div className="mb-6 flex flex-col items-center text-center">
-              <div className="relative">
-                <img src={displayImage} alt="Profile" className="h-28 w-28 rounded-[28px] object-cover shadow-[0_18px_40px_rgba(15,23,42,0.14)]" />
-                <label htmlFor="avatar-upload" className="absolute -bottom-2 -right-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)] transition hover:scale-105">
-                  <Camera className="h-4 w-4" />
-                  <input id="avatar-upload" type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+        {/* ─── Main Grid ─── */}
+        <div className="profile-main-grid" style={{ gap: 20, alignItems: 'start' }}>
+
+          {/* ─── Left Sidebar ─── */}
+          <aside style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* Avatar Card */}
+            <div style={{ ...card(darkMode), textAlign: 'center' }}>
+              <div style={{ position: 'relative', display: 'inline-block', marginBottom: 16 }}>
+                <img
+                  src={displayImage} alt="Profile"
+                  style={{ width: 100, height: 100, borderRadius: 22, objectFit: 'cover',
+                    border: '3px solid rgba(99,102,241,0.3)', boxShadow: '0 8px 24px rgba(99,102,241,0.2)' }}
+                />
+                <label htmlFor="avatar-upload" style={{
+                  position: 'absolute', bottom: -6, right: -6,
+                  width: 34, height: 34, borderRadius: '50%', cursor: 'pointer',
+                  background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 4px 16px rgba(99,102,241,0.4)', border: '2px solid var(--tf-surface)',
+                }}>
+                  <Camera size={14} style={{ color: 'white' }} />
+                  <input id="avatar-upload" type="file" style={{ display: 'none' }} accept="image/*" onChange={handleFileChange} />
                 </label>
-                {publicId ? (
-                  <button type="button" onClick={handleDeleteProfilePic} className="absolute -left-2 -top-2 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2b2133] text-white transition hover:bg-[#392c45]">
-                    <Trash2 className="h-4 w-4" />
+                {publicId && (
+                  <button onClick={handleDeleteProfilePic} style={{
+                    position: 'absolute', top: -6, left: -6, width: 28, height: 28, borderRadius: '50%',
+                    background: '#fef2f2', border: '1px solid #fecaca', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <Trash2 size={12} style={{ color: '#f43f5e' }} />
                   </button>
-                ) : null}
+                )}
               </div>
-              <h2 className="mt-5 text-2xl font-bold">{user?.name}</h2>
-              <p className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>@{profileForm.username || 'username'}</p>
-              <div className={`mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ${darkMode ? 'bg-white/8 text-slate-200' : 'bg-slate-100 text-slate-700'}`}>
-                <Mail className="h-4 w-4" />
-                {user?.email}
+
+              <h2 style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 4 }}>{user?.name}</h2>
+              <p style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0', marginBottom: 10 }}>
+                @{profileForm.username || 'username'}
+              </p>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                background: darkMode ? 'rgba(99,102,241,0.1)' : '#eef0ff',
+                border: `1px solid ${darkMode ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.15)'}`,
+                borderRadius: 20, padding: '5px 14px', fontSize: 12, fontWeight: 600,
+                color: darkMode ? '#818cf8' : '#6366f1',
+              }}>
+                <Mail size={12} /> {user?.email}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-3 xl:grid-cols-1">
+            {/* Stats Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : 'repeat(3,1fr)', gap: 10 }}>
               {[
-                { label: 'Total Tasks', value: stats.total, icon: LayoutGrid },
-                { label: 'Completed', value: stats.completed, icon: CheckCircle2 },
-                { label: 'Pending', value: stats.pending, icon: Clock3 },
-              ].map(({ label, value, icon: Icon }) => (
-                <div key={label} className={`rounded-[24px] p-4 ${cardClass(darkMode)}`}>
-                  <div className="mb-3 flex items-center justify-between">
-                    <div className={darkMode ? 'rounded-2xl bg-[#2563eb]/20 p-2 text-[#93c5fd]' : 'rounded-2xl bg-blue-50 p-2 text-[#2563eb]'}>
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <span className={`text-xs uppercase tracking-[0.24em] ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>{label}</span>
+                { label: 'Total',      value: stats.total,     icon: LayoutGrid,   color: '#6366f1' },
+                { label: 'Completed',  value: stats.completed, icon: CheckCircle2, color: '#10b981' },
+                { label: 'Pending',    value: stats.pending,   icon: Clock3,       color: '#f59e0b' },
+              ].map(({ label: lbl, value, icon: Icon, color }) => (
+                <div key={lbl} style={softCard(darkMode)}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <Icon size={14} style={{ color }} />
+                    <span style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: darkMode ? 'var(--tf-text-subtle)' : '#8080a0' }}>{lbl}</span>
                   </div>
-                  <div className="text-3xl font-black">{value}</div>
+                  <div style={{ fontSize: 28, fontWeight: 900, color: darkMode ? 'var(--tf-text)' : '#1a1a2e' }}>{value}</div>
                 </div>
               ))}
             </div>
 
-            <div className={`mt-6 rounded-[24px] p-5 ${cardClass(darkMode)}`}>
-              <div className="mb-3 flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-[#2563eb]" />
-                <h3 className="font-semibold">Productivity Insight</h3>
+            {/* Productivity Insight */}
+            <div style={softCard(darkMode)}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <Sparkles size={14} style={{ color: '#6366f1' }} />
+                <span style={{ fontWeight: 700, fontSize: 14, color: darkMode ? 'var(--tf-text)' : '#1a1a2e' }}>Productivity Insight</span>
               </div>
-              <p className={`text-sm leading-6 ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>{productivityInsight}</p>
-              <div className={`mt-4 h-2 rounded-full ${darkMode ? 'bg-white/8' : 'bg-slate-200'}`}>
-                <div className="h-full rounded-full bg-[#2563eb] transition-all duration-500" style={{ width: `${stats.completionRate}%` }} />
+              <p style={{ fontSize: 13, lineHeight: 1.7, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>
+                {productivityInsight}
+              </p>
+              <div style={{ marginTop: 12, height: 6, background: darkMode ? 'var(--tf-surface-high)' : '#e0e0f8', borderRadius: 10, overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${stats.completionRate}%`, background: 'linear-gradient(90deg,#6366f1,#10b981)', borderRadius: 10, transition: 'width 0.6s' }} />
               </div>
-              <p className={`mt-2 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>{stats.completionRate}% completion rate</p>
+              <div style={{ fontSize: 12, marginTop: 6, color: darkMode ? 'var(--tf-text-subtle)' : '#8080a0', fontWeight: 600 }}>
+                {stats.completionRate}% completion rate
+              </div>
             </div>
           </aside>
 
-          <main className={`rounded-[24px] p-4 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:rounded-[32px] sm:p-6 ${darkMode ? 'border border-white/8 bg-white/6 backdrop-blur' : 'border border-slate-200 bg-white'}`}>
-            <div className="mb-6 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+          {/* ─── Right Main Panel ─── */}
+          <main style={card(darkMode)} className="animate-fade-in">
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: 6, marginBottom: 24, borderBottom: `1px solid ${darkMode ? 'var(--tf-border)' : 'rgba(99,102,241,0.1)'}`, paddingBottom: 16, flexWrap: 'wrap' }}>
               {TABS.map((tab) => (
                 <button
                   key={tab}
-                  type="button"
                   onClick={() => setActiveTab(tab)}
-                  className={`shrink-0 rounded-2xl px-4 py-2 text-sm font-medium transition ${
-                    activeTab === tab
-                      ? 'bg-[#2563eb] text-white shadow-[0_12px_24px_rgba(37,99,235,0.3)]'
-                      : darkMode
-                        ? 'bg-white/8 text-slate-200 hover:bg-white/12'
-                        : 'bg-slate-100 text-slate-700 hover:bg-blue-50'
-                  }`}
-                >
-                  {tab}
-                </button>
+                  style={{
+                    padding: '8px 18px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
+                    background: activeTab === tab ? 'linear-gradient(135deg,#6366f1,#8b5cf6)' : darkMode ? 'rgba(255,255,255,0.05)' : '#eef0ff',
+                    color: activeTab === tab ? 'white' : darkMode ? 'var(--tf-text-muted)' : '#6060a0',
+                    boxShadow: activeTab === tab ? '0 4px 16px rgba(99,102,241,0.35)' : 'none',
+                    transition: 'all 0.2s',
+                  }}
+                >{tab}</button>
               ))}
             </div>
 
-            {activeTab === 'Profile' ? (
-              <div className="grid gap-6 xl:grid-cols-[1fr_0.92fr]">
-                <form onSubmit={handleSaveProfile} className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                  <div className="mb-5">
-                    <h3 className="text-xl font-bold">Profile Details</h3>
-                    <p className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Keep your identity and account information up to date.</p>
+            {/* ── PROFILE TAB ── */}
+            {activeTab === 'Profile' && (
+              <div className="profile-tab-grid" style={{ gap: 20, alignItems: 'start' }}>
+                {/* Profile Details Form */}
+                <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <div>
+                    <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 4 }}>Profile Details</h3>
+                    <p style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>Keep your account information up to date.</p>
                   </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <label className="block">
-                      <span className={`mb-2 block text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>Full Name</span>
-                      <input name="name" value={profileForm.name} onChange={handleProfileInput} className={inputClass(darkMode)} />
-                    </label>
-                    <label className="block">
-                      <span className={`mb-2 block text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>Username</span>
-                      <input name="username" value={profileForm.username} onChange={handleProfileInput} className={inputClass(darkMode)} />
-                    </label>
-                    <label className="block md:col-span-2">
-                      <span className={`mb-2 block text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>Email Address</span>
-                      <input name="email" type="email" value={profileForm.email} onChange={handleProfileInput} className={inputClass(darkMode)} />
-                    </label>
+                  <div className="profile-two-col" style={{ gap: 12 }}>
+                    {[
+                      { field: 'name',     lbl: 'Full Name',  type: 'text'  },
+                      { field: 'username', lbl: 'Username',   type: 'text'  },
+                    ].map(({ field, lbl, type }) => (
+                      <label key={field} style={{ display: 'block' }}>
+                        <span style={label(darkMode)}>{lbl}</span>
+                        <input name={field} type={type} value={profileForm[field]}
+                          onChange={handleProfileInput} style={input(darkMode)} onFocus={onFocus} onBlur={onBlur} />
+                      </label>
+                    ))}
                   </div>
-                  <button type="submit" disabled={submitting} className="mt-5 inline-flex items-center rounded-2xl bg-[#2563eb] px-5 py-3 font-medium text-white transition hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-70">
-                    <Save className="mr-2 h-4 w-4" />
-                    Save Profile
+                  <label style={{ display: 'block' }}>
+                    <span style={label(darkMode)}>Email Address</span>
+                    <input name="email" type="email" value={profileForm.email} onChange={handleProfileInput} style={input(darkMode)} onFocus={onFocus} onBlur={onBlur} />
+                  </label>
+                  <button type="submit" disabled={submitting} style={{
+                    padding: '10px 22px', borderRadius: 11, fontSize: 13, fontWeight: 700,
+                    background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: 'white',
+                    border: 'none', cursor: submitting ? 'not-allowed' : 'pointer',
+                    opacity: submitting ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: 8, alignSelf: 'flex-start',
+                  }}>
+                    <Save size={14} /> Save Profile
                   </button>
                 </form>
 
-                <div className="space-y-6">
-                  <div className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                    <div className="mb-5 flex items-center gap-2">
-                      <Shield className="h-5 w-5 text-[#2563eb]" />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {/* Security Snapshot */}
+                  <div style={softCard(darkMode)}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                      <Shield size={16} style={{ color: '#6366f1' }} />
                       <div>
-                        <h3 className="text-xl font-bold">Security Snapshot</h3>
-                        <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Keep your account protected with strong credentials.</p>
+                        <div style={{ fontWeight: 700, fontSize: 14 }}>Security Snapshot</div>
+                        <div style={{ fontSize: 12, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>Keep your account protected.</div>
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
-                        <div className="text-sm font-medium">Last Login</div>
-                        <div className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{user?.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString() : 'Not available'}</div>
+                    {[
+                      { lbl: 'Last Login',    val: user?.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString() : 'Not available' },
+                      { lbl: 'Last Activity', val: user?.lastActiveAt ? new Date(user.lastActiveAt).toLocaleString() : 'Not available' },
+                    ].map(({ lbl, val }) => (
+                      <div key={lbl} style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>{lbl}</div>
+                        <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>{val}</div>
                       </div>
-                      <div className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
-                        <div className="text-sm font-medium">Last Activity</div>
-                        <div className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{user?.lastActiveAt ? new Date(user.lastActiveAt).toLocaleString() : 'Not available'}</div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
 
-                  <form onSubmit={handleChangePassword} className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                    <div className="mb-5 flex items-center gap-2">
-                      <KeyRound className="h-5 w-5 text-[#2563eb]" />
+                  {/* Change Password */}
+                  <form onSubmit={handleChangePassword} style={{ ...softCard(darkMode), display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                      <KeyRound size={16} style={{ color: '#6366f1' }} />
                       <div>
-                        <h3 className="text-xl font-bold">Change Password</h3>
-                        <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Use a strong password with uppercase, lowercase, and numbers.</p>
+                        <div style={{ fontWeight: 700, fontSize: 14 }}>Change Password</div>
+                        <div style={{ fontSize: 12, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>Use 8+ chars, uppercase & numbers.</div>
                       </div>
                     </div>
-                    <div className="space-y-4">
-                      {[
-                        { key: 'currentPassword', label: 'Current Password' },
-                        { key: 'newPassword', label: 'New Password' },
-                        { key: 'confirmPassword', label: 'Confirm New Password' },
-                      ].map((field) => (
-                        <label key={field.key} className="block">
-                          <span className={`mb-2 block text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>{field.label}</span>
-                          <input type="password" name={field.key} value={passwordForm[field.key]} onChange={handlePasswordInput} className={inputClass(darkMode)} />
-                        </label>
-                      ))}
-                    </div>
-                    <button type="submit" disabled={submitting} className="mt-5 inline-flex items-center rounded-2xl bg-[#2b2133] px-5 py-3 font-medium text-white transition hover:bg-[#392c45] disabled:cursor-not-allowed disabled:opacity-70">
-                      <Shield className="mr-2 h-4 w-4" />
-                      Update Password
+                    {[
+                      { key: 'currentPassword', lbl: 'Current Password' },
+                      { key: 'newPassword',      lbl: 'New Password' },
+                      { key: 'confirmPassword',  lbl: 'Confirm Password' },
+                    ].map(({ key, lbl }) => (
+                      <label key={key} style={{ display: 'block' }}>
+                        <span style={label(darkMode)}>{lbl}</span>
+                        <input type="password" name={key} value={passwordForm[key]} onChange={handlePasswordInput} style={input(darkMode)} onFocus={onFocus} onBlur={onBlur} />
+                      </label>
+                    ))}
+                    <button type="submit" disabled={submitting} style={{
+                      padding: '10px 18px', borderRadius: 10, fontSize: 13, fontWeight: 700,
+                      background: darkMode ? 'rgba(99,102,241,0.15)' : '#eef0ff',
+                      color: darkMode ? '#818cf8' : '#6366f1',
+                      border: `1px solid ${darkMode ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.15)'}`,
+                      cursor: submitting ? 'not-allowed' : 'pointer',
+                      display: 'flex', alignItems: 'center', gap: 8, alignSelf: 'flex-start',
+                    }}>
+                      <Shield size={14} /> Update Password
                     </button>
                   </form>
                 </div>
               </div>
-            ) : null}
+            )}
 
-            {activeTab === 'Activity' ? (
-              <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-                <div className="space-y-6">
-                  <div className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                    <h3 className="text-xl font-bold">Recent Tasks</h3>
-                    <div className="mt-4 space-y-3">
+            {/* ── ACTIVITY TAB ── */}
+            {activeTab === 'Activity' && (
+              <div className="profile-tab-grid" style={{ gap: 20, alignItems: 'start' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {/* Recent Tasks */}
+                  <div>
+                    <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 12 }}>Recent Tasks</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                       {tasksLoading ? (
-                        <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Loading tasks...</div>
-                      ) : recentTasks.length ? (
-                        recentTasks.map((task) => (
-                          <div key={task._id} className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
-                            <div className="flex items-center justify-between gap-3">
-                              <div>
-                                <div className="font-semibold">{task.taskName}</div>
-                                <div className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{task.category || 'General'} • {task.taskStatus}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0', fontSize: 13 }}>
+                          <div className="tf-spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />
+                          Loading tasks…
+                        </div>
+                      ) : recentTasks.length ? recentTasks.map((task) => (
+                        <div key={task._id} style={softCard(darkMode)}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+                            <div>
+                              <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>{task.taskName}</div>
+                              <div style={{ fontSize: 12, color: darkMode ? 'var(--tf-text-subtle)' : '#8080a0' }}>
+                                {task.category || 'General'} · {task.taskStatus}
                               </div>
-                              <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                task.priority === 'High'
-                                ? 'bg-sky-100 text-sky-700'
-                                  : task.priority === 'Medium'
-                                    ? 'bg-amber-100 text-amber-700'
-                                    : 'bg-slate-100 text-slate-700'
-                              }`}>
-                                {task.priority}
-                              </span>
                             </div>
+                            <span style={{
+                              fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 8, flexShrink: 0,
+                              background: task.priority === 'High' ? 'rgba(244,63,94,0.12)' : task.priority === 'Medium' ? 'rgba(245,158,11,0.12)' : 'rgba(76,215,246,0.12)',
+                              color: task.priority === 'High' ? '#f43f5e' : task.priority === 'Medium' ? '#f59e0b' : '#4cd7f6',
+                            }}>{task.priority}</span>
                           </div>
-                        ))
-                      ) : (
-                        <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>No recent tasks yet.</div>
-                      )}
+                        </div>
+                      )) : <div style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>No recent tasks yet.</div>}
                     </div>
                   </div>
 
-                  <div className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                    <h3 className="text-xl font-bold">Recently Completed</h3>
-                    <div className="mt-4 space-y-3">
-                      {recentCompletedTasks.length ? (
-                        recentCompletedTasks.map((task) => (
-                          <div key={task._id} className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2563eb] text-white">
-                                <CheckCircle2 className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <div className="font-semibold">{task.taskName}</div>
-                                <div className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Completed {normalizeDate(task.updatedAt)?.toLocaleString() || 'recently'}</div>
-                              </div>
+                  {/* Recently Completed */}
+                  <div>
+                    <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 12 }}>Recently Completed</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {recentCompletedTasks.length ? recentCompletedTasks.map((task) => (
+                        <div key={task._id} style={{ ...softCard(darkMode), display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <CheckCircle2 size={16} style={{ color: '#10b981' }} />
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 600, fontSize: 13 }}>{task.taskName}</div>
+                            <div style={{ fontSize: 12, color: darkMode ? 'var(--tf-text-subtle)' : '#8080a0' }}>
+                              {normalizeDate(task.updatedAt)?.toLocaleDateString() || 'recently'}
                             </div>
                           </div>
-                        ))
-                      ) : (
-                        <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Completed tasks will appear here.</div>
-                      )}
+                        </div>
+                      )) : <div style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>Completed tasks will appear here.</div>}
                     </div>
                   </div>
                 </div>
 
-                <div className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                  <h3 className="text-xl font-bold">Activity Timeline</h3>
-                  <p className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Recent updates, completions, comments, and task changes from your workspace.</p>
-                  <div className="mt-5 space-y-4">
-                    {activityTimeline.length ? (
-                      activityTimeline.map((entry, index) => (
-                        <div key={`${entry.taskId}-${entry.createdAt}-${index}`} className="flex gap-4">
-                          <div className="flex flex-col items-center">
-                            <div className="mt-1 h-3 w-3 rounded-full bg-[#2563eb]" />
-                            {index !== activityTimeline.length - 1 ? <div className={`mt-2 h-full w-px ${darkMode ? 'bg-white/10' : 'bg-slate-200'}`} /> : null}
-                          </div>
-                          <div className={`flex-1 rounded-2xl p-4 ${softCardClass(darkMode)}`}>
-                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                              <div>
-                                <div className="font-semibold">{entry.summary}</div>
-                                <div className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{entry.taskName}</div>
-                              </div>
-                              <div className={`text-xs ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>{normalizeDate(entry.createdAt)?.toLocaleString()}</div>
-                            </div>
-                          </div>
+                {/* Activity Timeline */}
+                <div>
+                  <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Activity Timeline</h3>
+                  <p style={{ fontSize: 12, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0', marginBottom: 16 }}>Recent updates and task changes from your workspace.</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                    {activityTimeline.length ? activityTimeline.map((entry, i) => (
+                      <div key={`${entry.taskId}-${entry.createdAt}-${i}`} style={{ display: 'flex', gap: 14 }}>
+                        {/* Timeline dot */}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                          <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', marginTop: 4, flexShrink: 0 }} />
+                          {i < activityTimeline.length - 1 && (
+                            <div style={{ width: 2, flex: 1, background: darkMode ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.12)', margin: '4px 0' }} />
+                          )}
                         </div>
-                      ))
-                    ) : (
-                      <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Your activity timeline will fill up as you manage tasks.</div>
+                        <div style={{ ...softCard(darkMode), flex: 1, marginBottom: 10 }}>
+                          <div style={{ fontWeight: 600, fontSize: 13 }}>{entry.summary}</div>
+                          <div style={{ fontSize: 12, color: darkMode ? 'var(--tf-text-subtle)' : '#8080a0', marginTop: 2 }}>{entry.taskName}</div>
+                          <div style={{ fontSize: 11, color: darkMode ? 'var(--tf-text-subtle)' : '#8080a0', marginTop: 4 }}>{normalizeDate(entry.createdAt)?.toLocaleString()}</div>
+                        </div>
+                      </div>
+                    )) : (
+                      <div style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>Activity timeline will fill up as you manage tasks.</div>
                     )}
                   </div>
                 </div>
               </div>
-            ) : null}
+            )}
 
-            {activeTab === 'Settings' ? (
-              <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-                <div className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                  <h3 className="text-xl font-bold">Preferences</h3>
-                  <p className={`mt-1 text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Tailor the experience to your workflow and communication style.</p>
-                  <div className="mt-5 space-y-3">
+            {/* ── SETTINGS TAB ── */}
+            {activeTab === 'Settings' && (
+              <div className="profile-tab-grid" style={{ gap: 20, alignItems: 'start' }}>
+                {/* Preferences */}
+                <div>
+                  <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Preferences</h3>
+                  <p style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0', marginBottom: 16 }}>Tailor the experience to your workflow.</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {[
-                      { key: 'darkMode', label: 'Dark Mode', icon: darkMode ? Moon : SunMedium },
-                      { key: 'emailNotifications', label: 'Email Notifications', icon: Mail },
-                      { key: 'deadlineReminders', label: 'Deadline Reminders', icon: Clock3 },
-                      { key: 'assignmentNotifications', label: 'Assignment Alerts', icon: Bell },
-                      { key: 'productUpdates', label: 'Product Updates', icon: Sparkles },
-                    ].map(({ key, label, icon: Icon }) => (
-                      <button key={key} type="button" onClick={() => handlePreferenceToggle(key)} className={`flex w-full items-center justify-between rounded-2xl p-4 text-left transition ${softCardClass(darkMode)} ${darkMode ? 'hover:bg-white/10' : 'hover:bg-blue-50'}`}>
-                        <div className="flex items-center gap-3">
-                          <div className={darkMode ? 'rounded-2xl bg-white/8 p-2 text-slate-200' : 'rounded-2xl bg-white p-2 text-slate-700'}>
-                            <Icon className="h-4 w-4" />
+                      { key: 'darkMode',                  lbl: 'Dark Mode',             icon: darkMode ? Moon : SunMedium },
+                      { key: 'emailNotifications',        lbl: 'Email Notifications',   icon: Mail   },
+                      { key: 'deadlineReminders',         lbl: 'Deadline Reminders',    icon: Clock3 },
+                      { key: 'assignmentNotifications',   lbl: 'Assignment Alerts',     icon: Bell   },
+                      { key: 'productUpdates',            lbl: 'Product Updates',       icon: Sparkles },
+                    ].map(({ key, lbl, icon: Icon }) => (
+                      <button
+                        key={key}
+                        onClick={() => handlePreferenceToggle(key)}
+                        style={{
+                          ...softCard(darkMode),
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          border: `1px solid ${darkMode ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.1)'}`,
+                          cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ width: 32, height: 32, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', background: darkMode ? 'rgba(99,102,241,0.15)' : '#eef0ff' }}>
+                            <Icon size={15} style={{ color: '#6366f1' }} />
                           </div>
-                          <span className="font-medium">{label}</span>
+                          <span style={{ fontWeight: 600, fontSize: 13 }}>{lbl}</span>
                         </div>
-                        <div className={`relative h-7 w-12 rounded-full transition ${preferences[key] ? 'bg-[#2563eb]' : darkMode ? 'bg-white/10' : 'bg-slate-200'}`}>
-                          <span className={`absolute top-1 h-5 w-5 rounded-full bg-white transition ${preferences[key] ? 'left-6' : 'left-1'}`} />
+                        {/* Toggle */}
+                        <div style={{
+                          width: 44, height: 24, borderRadius: 12, position: 'relative',
+                          background: preferences[key] ? 'linear-gradient(135deg,#6366f1,#8b5cf6)' : darkMode ? 'rgba(255,255,255,0.1)' : '#ddd',
+                          transition: 'background 0.25s', flexShrink: 0,
+                          boxShadow: preferences[key] ? '0 2px 10px rgba(99,102,241,0.4)' : 'none',
+                        }}>
+                          <div style={{
+                            position: 'absolute', top: 3, width: 18, height: 18, borderRadius: '50%',
+                            background: 'white', transition: 'left 0.25s',
+                            left: preferences[key] ? 23 : 3,
+                          }} />
                         </div>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <div className={`rounded-[28px] p-5 ${cardClass(darkMode)}`}>
-                    <h3 className="text-xl font-bold">Account Management</h3>
-                    <div className="mt-5 grid gap-4 md:grid-cols-2">
-                      <div className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
-                        <div className="mb-2 flex items-center gap-2 font-semibold">
-                          <User className="h-4 w-4 text-[#2563eb]" />
-                          Account Role
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {/* Account Management */}
+                  <div>
+                    <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 12 }}>Account Management</h3>
+                    <div className="profile-two-col" style={{ gap: 10 }}>
+                      <div style={softCard(darkMode)}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                          <User size={13} style={{ color: '#6366f1' }} />
+                          <span style={{ fontWeight: 700, fontSize: 12 }}>Account Role</span>
                         </div>
-                        <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{user?.role || 'user'}</p>
+                        <p style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0', textTransform: 'capitalize' }}>{user?.role || 'user'}</p>
                       </div>
-                      <div className={`rounded-2xl p-4 ${softCardClass(darkMode)}`}>
-                        <div className="mb-2 flex items-center gap-2 font-semibold">
-                          <Shield className="h-4 w-4 text-[#2563eb]" />
-                          Account Status
+                      <div style={softCard(darkMode)}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                          <Shield size={13} style={{ color: '#10b981' }} />
+                          <span style={{ fontWeight: 700, fontSize: 12 }}>Account Status</span>
                         </div>
-                        <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Protected with secure session cookies and password hashing</p>
+                        <p style={{ fontSize: 13, color: darkMode ? 'var(--tf-text-muted)' : '#6060a0' }}>Protected & Secure ✓</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className={`rounded-[28px] p-5 ${darkMode ? 'border border-white/8 bg-white/6' : 'border border-slate-200 bg-slate-50'}`}>
-                    <h3 className="text-xl font-bold text-slate-900">Danger Zone</h3>
-                    <p className="mt-2 max-w-xl text-sm text-slate-600">Deleting your account is permanent and removes access to your personal workspace data.</p>
-                    <button type="button" onClick={handleDeleteAccount} className="mt-5 inline-flex items-center rounded-2xl bg-rose-600 px-5 py-3 font-medium text-white transition hover:bg-rose-700">
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete Account
+                  {/* Danger Zone */}
+                  <div style={{
+                    background: 'rgba(244,63,94,0.06)', border: '1px solid rgba(244,63,94,0.15)',
+                    borderRadius: 16, padding: 18,
+                  }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 800, color: '#f43f5e', marginBottom: 6 }}>Danger Zone</h3>
+                    <p style={{ fontSize: 13, color: darkMode ? 'rgba(244,63,94,0.7)' : '#c0304a', marginBottom: 16, lineHeight: 1.6 }}>
+                      Deleting your account is permanent and removes all your workspace data.
+                    </p>
+                    <button
+                      onClick={handleDeleteAccount}
+                      style={{
+                        padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700,
+                        background: '#f43f5e', color: 'white', border: 'none', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        boxShadow: '0 4px 16px rgba(244,63,94,0.3)',
+                      }}
+                    >
+                      <Trash2 size={14} /> Delete Account
                     </button>
                   </div>
                 </div>
               </div>
-            ) : null}
+            )}
           </main>
         </div>
       </div>

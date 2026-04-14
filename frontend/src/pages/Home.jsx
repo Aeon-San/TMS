@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const stats = [
@@ -7,290 +8,413 @@ const stats = [
 ];
 
 const features = [
-  "Clean task organization",
-  "Fast priorities and deadlines",
-  "Team-friendly workflow",
-  "Real-time progress tracking",
+  {
+    icon: "🗂️",
+    title: "Clean task organization",
+    desc: "Create boards, lists and cards. Organize everything effortlessly.",
+    color: "rgba(99,102,241,0.12)",
+    border: "rgba(99,102,241,0.2)",
+  },
+  {
+    icon: "🎯",
+    title: "Smart priorities & deadlines",
+    desc: "Assign High/Medium/Low priorities. Never miss a deadline again.",
+    color: "rgba(139,92,246,0.12)",
+    border: "rgba(139,92,246,0.2)",
+  },
+  {
+    icon: "👥",
+    title: "Team-friendly workflow",
+    desc: "Collaborate in real-time. Assign tasks, leave comments, track progress.",
+    color: "rgba(6,182,212,0.10)",
+    border: "rgba(6,182,212,0.18)",
+  },
+  {
+    icon: "📊",
+    title: "Real-time progress tracking",
+    desc: "Detailed analytics, Pomodoro timer, and AI-powered suggestions.",
+    color: "rgba(244,63,94,0.10)",
+    border: "rgba(244,63,94,0.18)",
+  },
 ];
 
+const benefits = [
+  {
+    tag: "Focus",
+    title: "Less noise, more action",
+    desc: "Keep the experience calm and remove distractions from the first screen.",
+    dark: true,
+  },
+  {
+    tag: "Speed",
+    title: "Quick to scan",
+    desc: "The layout mirrors a premium dashboard with a strong hierarchy and easy-to-read sections.",
+    dark: false,
+  },
+  {
+    tag: "Clarity",
+    title: "Designed to feel premium",
+    desc: "Deep indigo surfaces, smooth gradients, and glassmorphism that sets the mood.",
+    dark: false,
+  },
+];
+
+const taskItems = [
+  { name: "Finish project proposal", priority: "High", pct: 78 },
+  { name: "Review team updates",     priority: "Med",  pct: 45 },
+  { name: "Deploy to production",    priority: "Low",  pct: 20 },
+];
+
+const priorityColor = { High: "#f43f5e", Med: "#f59e0b", Low: "#4cd7f6" };
+
 const Home = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
+  const isMobile = viewportWidth < 768;
+  const isTablet = viewportWidth < 1024;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#ececec] text-slate-900">
-      <header className="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link to="/" className="text-2xl font-black tracking-tight text-slate-950">
-            TaskFlow
+    <div style={{ background: "var(--tf-surface)", color: "var(--tf-text)", minHeight: "100vh" }}>
+      {/* ─── Gradient Orbs ─── */}
+      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", overflow: "hidden", zIndex: 0 }}>
+        <div className="orb orb-indigo animate-pulse-glow" style={{ width: 600, height: 600, top: "-200px", left: "-150px" }} />
+        <div className="orb orb-violet" style={{ width: 400, height: 400, top: "40%", right: "-100px", opacity: 0.5 }} />
+        <div className="orb orb-cyan" style={{ width: 300, height: 300, bottom: "20%", left: "30%" }} />
+      </div>
+
+      {/* ─── Navbar ─── */}
+      <header
+        style={{
+          position: "sticky", top: 0, zIndex: 100,
+          background: scrolled ? "rgba(18,18,34,0.85)" : "transparent",
+          backdropFilter: scrolled ? "blur(20px)" : "none",
+          borderBottom: scrolled ? "1px solid var(--tf-border)" : "1px solid transparent",
+          transition: "all 0.3s ease",
+        }}
+      >
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "0 14px" : "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 68 }}>
+          {/* Logo */}
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
+              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18,
+              boxShadow: "0 4px 16px rgba(99,102,241,0.4)",
+            }}>✦</div>
+            <span style={{ fontWeight: 900, fontSize: 20, letterSpacing: "-0.03em", color: "var(--tf-text)" }}>
+              TaskFlow <span style={{ background: "linear-gradient(135deg,#6366f1,#4cd7f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Pro</span>
+            </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
-            <a href="#features" className="text-sm font-medium text-slate-600 hover:text-slate-950">
-              Features
-            </a>
-            <a href="#benefits" className="text-sm font-medium text-slate-600 hover:text-slate-950">
-              Benefits
-            </a>
-            <a href="#cta" className="text-sm font-medium text-slate-600 hover:text-slate-950">
-              Get Started
-            </a>
+          {/* Nav Links */}
+          <nav style={{ display: "flex", alignItems: "center", gap: 32 }} className="hidden md:flex">
+            {["Features", "Benefits", "Get Started"].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase().replace(" ", "-")}`}
+                style={{ color: "var(--tf-text-muted)", fontSize: 14, fontWeight: 500, textDecoration: "none", transition: "color 0.2s" }}
+                onMouseEnter={(e) => (e.target.style.color = "var(--tf-primary)")}
+                onMouseLeave={(e) => (e.target.style.color = "var(--tf-text-muted)")}
+              >
+                {item}
+              </a>
+            ))}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              className="rounded-full px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-            >
-              Sign Up
-            </Link>
+          {/* Auth Buttons */}
+          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <Link to="/login" style={{
+              padding: isMobile ? "8px 12px" : "9px 20px", borderRadius: 10, fontSize: 14, fontWeight: 600,
+              background: "rgba(196,193,255,0.08)", color: "var(--tf-primary)",
+              border: "1px solid rgba(196,193,255,0.15)", textDecoration: "none",
+              transition: "all 0.2s",
+            }}>Login</Link>
+            <Link to="/signup" className="btn-glow" style={{
+              padding: isMobile ? "8px 12px" : "9px 20px", borderRadius: 10, fontSize: 14, fontWeight: 700,
+              textDecoration: "none", color: "white",
+            }}>Get Started</Link>
           </div>
         </div>
       </header>
 
-      <main>
-        <section className="px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl rounded-[2rem] bg-[#f5f5f5] p-4 shadow-[0_24px_80px_rgba(15,23,42,0.12)] sm:p-6 lg:p-8">
-            <div className="grid min-h-[72vh] items-center gap-10 rounded-[1.5rem] bg-white px-6 py-10 sm:px-10 lg:grid-cols-2 lg:px-14">
-              <div className="max-w-xl">
-                <div className="mb-5 inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-600">
-                  To-do list
+      <main style={{ position: "relative", zIndex: 1 }}>
+        {/* ─── Hero Section ─── */}
+        <section className="mobile-anim-in" style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "38px 14px 38px" : "80px 24px 60px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1fr 1fr", gap: isMobile ? 24 : 60, alignItems: "center" }}>
+            {/* Left: Text */}
+            <div className="animate-slide-up">
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.2)",
+                borderRadius: 40, padding: "6px 16px", fontSize: 12, fontWeight: 700,
+                color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 24,
+              }}>
+                <span style={{ color: "#4cd7f6" }}>✦</span> Premium Task Management
+              </div>
+
+              <h1 style={{
+                fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 900,
+                lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 20,
+              }}>
+                Manage Tasks.{" "}
+                <span style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  Ship Faster.
+                </span>{" "}
+                Stay Focused.
+              </h1>
+
+              <p style={{ fontSize: 18, lineHeight: 1.7, color: "var(--tf-text-muted)", maxWidth: 480, marginBottom: 36 }}>
+                Keep every task, deadline, and team update in one calm workspace.
+                The layout stays focused, beautiful, and easy to use every day.
+              </p>
+
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 48 }}>
+                <Link to="/signup" className="btn-glow" style={{
+                  padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700,
+                  textDecoration: "none", color: "white",
+                }}>
+                  Start for Free →
+                </Link>
+                <a href="#features" style={{
+                  padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 600,
+                  background: "rgba(196,193,255,0.06)", border: "1px solid var(--tf-border)",
+                  color: "var(--tf-text-muted)", textDecoration: "none", transition: "all 0.2s",
+                }}>
+                  Explore Features
+                </a>
+              </div>
+
+              {/* Stats */}
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 12 }}>
+                {stats.map((s) => (
+                  <div key={s.label} style={{
+                    background: "var(--tf-surface-mid)", border: "1px solid var(--tf-border)",
+                    borderRadius: 16, padding: "16px",
+                  }}>
+                    <div style={{
+                      fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em",
+                      background: "linear-gradient(135deg,#c0c1ff,#4cd7f6)",
+                      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                    }}>{s.value}</div>
+                    <div style={{ fontSize: 12, color: "var(--tf-text-subtle)", marginTop: 4, fontWeight: 500 }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Dashboard Preview Card */}
+            <div style={{ position: "relative" }}>
+              <div className="animate-float" style={{
+                background: "rgba(18,18,34,0.9)", border: "1px solid var(--tf-border)",
+                borderRadius: 24, padding: isMobile ? 16 : 24, boxShadow: "var(--tf-shadow-elevated)",
+                backdropFilter: "blur(16px)",
+              }}>
+                {/* Header */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: "var(--tf-text-subtle)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 4 }}>Today's Workspace</div>
+                    <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: "-0.02em" }}>Your Board</div>
+                  </div>
+                  <div style={{
+                    background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
+                    borderRadius: 20, padding: "5px 14px", fontSize: 12, fontWeight: 700,
+                    boxShadow: "0 4px 16px rgba(99,102,241,0.4)",
+                  }}>7 tasks</div>
                 </div>
 
-                <h1 className="text-5xl font-black tracking-tight text-slate-950 sm:text-6xl">
-                  Task
-                  <span className="block">Management</span>
-                </h1>
-
-                <p className="mt-5 max-w-lg text-base leading-7 text-slate-500 sm:text-lg">
-                  Keep every task, deadline, and team update in one calm workspace.
-                  The layout stays simple, focused, and easy to use.
-                </p>
-
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link
-                    to="/signup"
-                    className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-                  >
-                    Get Started
-                  </Link>
-                  <a
-                    href="#features"
-                    className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
-                  >
-                    Learn More
-                  </a>
-                </div>
-
-                <div className="mt-10 grid gap-3 sm:grid-cols-3">
-                  {stats.map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4"
-                    >
-                      <div className="text-2xl font-black text-slate-950">
-                        {item.value}
+                {/* Tasks */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {taskItems.map((task) => (
+                    <div key={task.name} style={{
+                      background: "var(--tf-surface-low)", borderRadius: 14, padding: 14,
+                      border: "1px solid var(--tf-border)",
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "var(--tf-text)" }}>{task.name}</span>
+                        <span style={{
+                          fontSize: 10, fontWeight: 700, borderRadius: 6, padding: "3px 8px",
+                          background: `${priorityColor[task.priority]}22`,
+                          color: priorityColor[task.priority],
+                          border: `1px solid ${priorityColor[task.priority]}44`,
+                        }}>{task.priority}</span>
                       </div>
-                      <div className="mt-1 text-sm text-slate-500">
-                        {item.label}
+                      <div style={{ height: 5, background: "var(--tf-surface-high)", borderRadius: 10, overflow: "hidden" }}>
+                        <div style={{
+                          height: "100%", width: `${task.pct}%`, borderRadius: 10,
+                          background: "linear-gradient(90deg,#6366f1,#8b5cf6)",
+                          transition: "width 0.6s",
+                        }} />
                       </div>
+                      <div style={{ fontSize: 10, color: "var(--tf-text-subtle)", marginTop: 5, textAlign: "right" }}>{task.pct}% complete</div>
                     </div>
                   ))}
                 </div>
-              </div>
 
-              <div className="relative flex min-h-[420px] items-center justify-center">
-                <div className="absolute left-6 top-8 h-24 w-24 rounded-full bg-sky-200/70 blur-3xl" />
-                <div className="absolute bottom-8 right-2 h-28 w-28 rounded-full bg-emerald-200/70 blur-3xl" />
-
-                <div className="relative w-full max-w-[460px] rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.14)]">
-                  <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                {/* Weekly Chart */}
+                <div style={{ marginTop: 16, background: "var(--tf-surface-low)", borderRadius: 14, padding: 14, border: "1px solid var(--tf-border)" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                     <div>
-                      <div className="text-sm font-medium text-slate-500">Today</div>
-                      <div className="text-2xl font-black text-slate-950">Your board</div>
+                      <div style={{ fontSize: 11, color: "var(--tf-text-subtle)", textTransform: "uppercase", letterSpacing: "0.12em" }}>Weekly progress</div>
+                      <div style={{ fontWeight: 700, fontSize: 14 }}>On Track</div>
                     </div>
-                    <div className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
-                      7 tasks active
-                    </div>
+                    <div style={{
+                      background: "rgba(76,215,246,0.12)", color: "#4cd7f6",
+                      border: "1px solid rgba(76,215,246,0.2)", borderRadius: 8,
+                      padding: "3px 10px", fontSize: 11, fontWeight: 700,
+                    }}>+12% this week</div>
                   </div>
-
-                  <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-                    <div className="rounded-[1.4rem] bg-slate-50 p-5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-slate-500">
-                          Priority
-                        </span>
-                        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">
-                          High
-                        </span>
-                      </div>
-                      <p className="mt-4 text-xl font-black text-slate-950">
-                        Finish project proposal
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-slate-500">
-                        Focus on what matters first, then move the rest with
-                        confidence.
-                      </p>
-
-                      <div className="mt-5 space-y-3">
-                        <div className="h-2 rounded-full bg-slate-200">
-                          <div className="h-2 w-[78%] rounded-full bg-slate-900" />
-                        </div>
-                        <div className="text-right text-xs font-semibold text-slate-500">
-                          78% complete
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid gap-4">
-                      <div className="rounded-[1.4rem] bg-[#eef4ff] p-4">
-                        <div className="text-sm text-slate-500">Focus streak</div>
-                        <div className="mt-2 text-3xl font-black text-slate-950">
-                          14 days
-                        </div>
-                      </div>
-                      <div className="rounded-[1.4rem] border border-slate-200 bg-white p-4">
-                        <div className="text-sm text-slate-500">Next up</div>
-                        <div className="mt-2 text-lg font-bold text-slate-950">
-                          Review updates
-                        </div>
-                        <div className="mt-1 text-sm text-slate-500">
-                          Scheduled in 20 mins
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 rounded-[1.6rem] border border-slate-200 bg-[#f8fafc] p-5">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm font-semibold text-slate-500">
-                          Weekly progress
-                        </div>
-                        <div className="mt-1 text-xl font-black text-slate-950">
-                          On track
-                        </div>
-                      </div>
-                      <div className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
-                        +12% this week
-                      </div>
-                    </div>
-                    <div className="mt-4 flex h-28 items-end gap-3">
-                      {[35, 52, 45, 76, 58, 90, 68].map((height, index) => (
-                        <div key={index} className="flex-1">
-                          <div
-                            className="rounded-t-2xl bg-gradient-to-t from-slate-900 to-slate-500"
-                            style={{ height: `${height}%` }}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                  <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 50 }}>
+                    {[35, 52, 45, 76, 58, 90, 68].map((h, i) => (
+                      <div key={i} style={{ flex: 1, background: "linear-gradient(180deg,#8083ff,#6366f1)", borderRadius: "6px 6px 0 0", height: `${h}%`, opacity: i === 5 ? 1 : 0.5 }} />
+                    ))}
                   </div>
                 </div>
               </div>
+
+              {/* Floating accent pills */}
+              {!isMobile ? (
+              <div style={{
+                position: "absolute", top: -16, right: -16, background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
+                borderRadius: 12, padding: "10px 16px", fontSize: 12, fontWeight: 700,
+                boxShadow: "0 8px 24px rgba(99,102,241,0.4)",
+              }}>
+                <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 10 }}>Focus streak</div>
+                <div style={{ color: "white", fontWeight: 800 }}>14 days 🔥</div>
+              </div>
+              ) : null}
             </div>
           </div>
         </section>
 
-        <section id="features" className="px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-8 text-center">
-              <div className="text-sm font-bold uppercase tracking-[0.25em] text-slate-500">
-                Features
-              </div>
-              <h2 className="mt-3 text-4xl font-black text-slate-950">
-                Simple design, powerful workflow
-              </h2>
-            </div>
+        {/* Focus Beam */}
+        <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px" }}>
+          <div className="focus-beam" />
+        </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {features.map((feature) => (
-                <div
-                  key={feature}
-                  className="rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.08)]"
-                >
-                  <div className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">
-                    TaskFlow
-                  </div>
-                  <div className="mt-3 text-lg font-bold text-slate-950">
-                    {feature}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="benefits" className="px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-3">
-            <div className="rounded-[1.8rem] bg-slate-900 p-8 text-white shadow-[0_20px_60px_rgba(15,23,42,0.16)]">
-              <div className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
-                Focus
-              </div>
-              <h3 className="mt-3 text-2xl font-black">Less noise, more action</h3>
-              <p className="mt-3 text-slate-300">
-                Keep the experience calm and remove distractions from the first
-                screen.
-              </p>
-            </div>
-
-            <div className="rounded-[1.8rem] border border-slate-200 bg-white p-8 shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
-              <div className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">
-                Speed
-              </div>
-              <h3 className="mt-3 text-2xl font-black text-slate-950">
-                Quick to scan
-              </h3>
-              <p className="mt-3 text-slate-600">
-                The layout mirrors a premium landing page with a strong hero and
-                easy-to-read sections.
-              </p>
-            </div>
-
-            <div className="rounded-[1.8rem] border border-slate-200 bg-white p-8 shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
-              <div className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">
-                Clarity
-              </div>
-              <h3 className="mt-3 text-2xl font-black text-slate-950">
-                Designed to feel premium
-              </h3>
-              <p className="mt-3 text-slate-600">
-                Clean whites, muted grays, and one strong dark CTA keep it
-                polished.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section id="cta" className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl rounded-[2rem] bg-white px-6 py-14 text-center shadow-[0_20px_60px_rgba(15,23,42,0.1)]">
-            <h2 className="text-4xl font-black text-slate-950">
-              Ready to get organized?
+        {/* ─── Features ─── */}
+        <section id="features" className="mobile-anim-in mobile-anim-delay-1" style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "48px 14px" : "80px 24px" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <div style={{
+              display: "inline-block", fontSize: 11, fontWeight: 700,
+              textTransform: "uppercase", letterSpacing: "0.2em", color: "#818cf8", marginBottom: 12,
+            }}>FEATURES</div>
+            <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 900, letterSpacing: "-0.03em" }}>
+              Simple design,{" "}
+              <span style={{ background: "linear-gradient(135deg,#6366f1,#4cd7f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                powerful workflow
+              </span>
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-600">
-              Start with a clean workspace that feels simple, modern, and easy
-              to use every day.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link
-                to="/signup"
-                className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
+            {features.map((f) => (
+              <div
+                key={f.title}
+                className="tf-card-interactive"
+                style={{
+                  background: f.color, border: `1px solid ${f.border}`,
+                  borderRadius: 20, padding: 28,
+                }}
               >
-                Sign Up Free
-              </Link>
-              <Link
-                to="/login"
-                className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                <div style={{ fontSize: 36, marginBottom: 16 }}>{f.icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: "var(--tf-text)" }}>{f.title}</div>
+                <div style={{ fontSize: 14, color: "var(--tf-text-muted)", lineHeight: 1.6 }}>{f.desc}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── Benefits ─── */}
+        <section id="benefits" className="mobile-anim-in mobile-anim-delay-2" style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "0 14px 48px" : "0 24px 80px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+            {benefits.map((b) => (
+              <div
+                key={b.title}
+                style={{
+                  background: b.dark ? "linear-gradient(135deg,#1e1e4a,#28183a)" : "var(--tf-surface-mid)",
+                  border: "1px solid var(--tf-border)",
+                  borderRadius: 22, padding: 32,
+                  boxShadow: b.dark ? "var(--tf-glow-sm)" : "none",
+                }}
               >
-                Login
-              </Link>
+                <div style={{
+                  fontSize: 11, fontWeight: 700, textTransform: "uppercase",
+                  letterSpacing: "0.2em", color: b.dark ? "#c0c1ff" : "#818cf8",
+                  marginBottom: 12,
+                }}>{b.tag}</div>
+                <h3 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 10, color: "var(--tf-text)" }}>
+                  {b.title}
+                </h3>
+                <p style={{ color: b.dark ? "rgba(199,196,215,0.8)" : "var(--tf-text-muted)", lineHeight: 1.7, fontSize: 14 }}>
+                  {b.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── CTA ─── */}
+        <section id="get-started" className="mobile-anim-pop mobile-anim-delay-3" style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "0 14px 48px" : "0 24px 80px" }}>
+          <div style={{
+            background: "linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.10),rgba(6,182,212,0.08))",
+            border: "1px solid rgba(99,102,241,0.2)", borderRadius: 28, padding: isMobile ? "36px 18px" : "60px 40px",
+            textAlign: "center", position: "relative", overflow: "hidden",
+          }}>
+            {/* Background orbs */}
+            <div className="orb orb-indigo animate-pulse-glow" style={{ width: 300, height: 300, top: "-80px", left: "10%", zIndex: 0 }} />
+            <div className="orb orb-violet" style={{ width: 200, height: 200, bottom: "-50px", right: "15%", zIndex: 0 }} />
+
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <h2 style={{ fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 16 }}>
+                Ready to get{" "}
+                <span style={{ background: "linear-gradient(135deg,#6366f1,#4cd7f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  organized?
+                </span>
+              </h2>
+              <p style={{ fontSize: 16, color: "var(--tf-text-muted)", maxWidth: 520, margin: "0 auto 32px", lineHeight: 1.7 }}>
+                Start with a clean workspace that feels simple, modern, and easy to use every day.
+              </p>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                <Link to="/signup" className="btn-glow" style={{
+                  padding: "14px 32px", borderRadius: 12, fontSize: 15, fontWeight: 700,
+                  textDecoration: "none", color: "white",
+                }}>
+                  Sign Up Free
+                </Link>
+                <Link to="/login" style={{
+                  padding: "14px 32px", borderRadius: 12, fontSize: 15, fontWeight: 600,
+                  background: "rgba(196,193,255,0.06)", border: "1px solid var(--tf-border)",
+                  color: "var(--tf-text-muted)", textDecoration: "none",
+                }}>
+                  Login →
+                </Link>
+              </div>
             </div>
           </div>
         </section>
       </main>
+
+      {/* ─── Footer ─── */}
+      <footer style={{
+        borderTop: "1px solid var(--tf-border)",
+        padding: "24px",
+        textAlign: "center",
+        color: "var(--tf-text-subtle)",
+        fontSize: 13,
+      }}>
+        © 2026 TaskFlow Pro. Made with ❤️ by Sanjib.
+      </footer>
     </div>
   );
 };

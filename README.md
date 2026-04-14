@@ -1,281 +1,275 @@
-# Task Management System
+# TaskFlow Pro - Full-Stack Task Management Platform
 
-Task Management System ek full-stack web app hai jisme user apne tasks, boards, notifications aur profile ko manage kar sakta hai. Project ka frontend React + Vite me bana hai aur backend Express + MongoDB use karta hai.
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=180&text=TaskFlow%20Pro&fontAlign=50&fontAlignY=34&color=0:6366f1,50:8b5cf6,100:4f7cff&fontColor=ffffff&desc=Modern%20Task%20Management%20System&descAlignY=55&descAlign=50" alt="TaskFlow Pro Banner" />
+</p>
 
-## Website Par Kya Kya Hai
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=18&pause=1000&color=8EA3FF&center=true&vCenter=true&width=820&lines=Plan+faster+%7C+Collaborate+smarter+%7C+Deliver+on+time;Grid+%7C+Kanban+%7C+Calendar+views;Boards%2C+comments%2C+attachments%2C+notifications%2C+Pomodoro+focus" alt="Typing Animation" />
+</p>
 
-### 1. Authentication Pages
-- `Signup` page: naya account create karne ke liye
-- `Login` page: existing user login karne ke liye
-- `Forgot Password` page: reset link bhejne ke liye
-- `Reset Password` page: token ke through password update karne ke liye
+<p align="center">
+  <img src="https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?style=for-the-badge&logo=react&logoColor=061A2A" />
+  <img src="https://img.shields.io/badge/Backend-Node%20%2B%20Express-111827?style=for-the-badge&logo=node.js&logoColor=7CFC8A" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-0B2A1F?style=for-the-badge&logo=mongodb&logoColor=1ED760" />
+  <img src="https://img.shields.io/badge/UI-Tailwind%20%2B%20DaisyUI-0F172A?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8" />
+</p>
 
-### 2. Dashboard
-Dashboard app ka main area hai. Yahan user:
-- apne tasks dekh sakta hai
-- task create, update, delete kar sakta hai
-- task status change kar sakta hai
-- task ko board ke andar manage kar sakta hai
-- search aur filters use kar sakta hai
-- grid, kanban aur calendar view me tasks dekh sakta hai
+---
 
-### 3. Board Management
-- naya board create kar sakte ho
-- board select karke uske tasks alag dekh sakte ho
-- dusre users ko board invite kar sakte ho
-- invitation accept/decline kar sakte ho
+## Overview
 
-### 4. Task Features
-Har task me ye cheezein ho sakti hain:
-- task name
-- description
-- priority
-- status
-- due date
-- category
-- tags
-- assignee
-- comments
-- activity history
+TaskFlow Pro is a production-style full-stack task management app built for personal productivity and team collaboration.  
+It includes authentication, board-based task workflows, comments, attachments, notifications, analytics, and a Pomodoro focus module.
 
-### 5. Productivity Features
-Dashboard me extra productivity tools bhi diye gaye hain:
-- analytics cards
-- productivity charts
-- Pomodoro widget
-- smart suggestions
-- notification bell
+---
 
-### 6. Profile Section
-- profile details update kar sakte ho
-- password change kar sakte ho
-- profile picture upload/delete kar sakte ho
-- account delete kar sakte ho
+## Core Features
 
-## Main Features
+- Secure auth flow: signup, login, forgot/reset password, protected routes
+- Board-based workspace with member/invitation support
+- Task lifecycle management: create, edit, delete, status updates
+- Multiple task views: Grid, Kanban, Calendar
+- Assignments, comments with mentions, and activity history
+- Attachment uploads on tasks (image-based upload flow)
+- Notification center + unread counter + mark-as-read actions
+- Deadline reminder notifications + email reminders
+- Productivity dashboard with analytics, charts, and Pomodoro widget
+- Profile management with profile picture upload/delete
+- Dark mode + responsive mobile-first UI + micro interactions/animations
 
-- JWT based authentication
-- Protected routes
-- Board-wise task organization
-- Task filtering and sorting
-- Grid, Kanban, Calendar views
-- Task assignment
-- Comment system
-- Notification system
-- Profile picture upload with Cloudinary
-- Responsive UI
-- Dark mode toggle in dashboard
+---
 
 ## Tech Stack
 
 ### Frontend
-- React
-- Vite
+- React 19
+- Vite 7
 - React Router
-- Tailwind CSS
-- DaisyUI
+- Tailwind CSS + DaisyUI
 - Axios
 - React Hook Form
 - React Hot Toast
+- React DatePicker
 - dnd-kit
+- React Icons / Lucide Icons
 
 ### Backend
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT
-- bcryptjs
-- Multer
-- Cloudinary
-- Nodemailer
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT + bcryptjs
+- Multer (file handling)
+- Cloudinary (media upload)
+- Nodemailer (email notifications)
+- Cookie-based auth + CORS protections
+
+---
 
 ## Project Structure
 
 ```text
-Task-Management-System-2-main/
-|-- backend/
-|   |-- src/
-|   |   |-- config/              # security related config
-|   |   |-- controllers/         # business logic and request handlers
-|   |   |-- database/            # MongoDB connection setup
-|   |   |-- library/             # helper utilities like token, mailer, cloudinary
-|   |   |-- middleware/          # auth, validation, upload, error handling
-|   |   |-- models/              # Mongoose schemas
-|   |   |-- routes/              # API route definitions
-|   |   |-- validators/          # request payload validators
-|   |   |-- index.js             # backend entry point
-|   |-- package.json
-|
-|-- frontend/
-|   |-- public/                  # static public assets
-|   |-- src/
-|   |   |-- assets/              # frontend assets
-|   |   |-- components/          # reusable UI components
-|   |   |-- context/             # auth context
-|   |   |-- hooks/               # custom hooks
-|   |   |-- layouts/             # public/protected layouts
-|   |   |-- library/             # API instances and helper files
-|   |   |-- pages/               # page level components
-|   |   |-- App.jsx              # frontend routes
-|   |   |-- main.jsx             # React app bootstrap
-|   |   |-- index.css            # global styles
-|   |-- package.json
-|
-|-- package.json                 # root scripts for build and start
-|-- README.md
+.
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── database/
+│   │   ├── library/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── validators/
+│   │   └── index.js
+│   └── package.json
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── library/
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   └── package.json
+├── package.json
+└── README.md
 ```
 
-## Important Frontend Files
+---
 
-- `frontend/src/App.jsx`:
-  app ke saare routes yahan define hain
-- `frontend/src/pages/Dashboard.jsx`:
-  main dashboard UI, filters, analytics, board selection, task views
-- `frontend/src/pages/Login.jsx`, `Signup.jsx`, `ForgotPassword.jsx`, `ResetPassword.jsx`:
-  authentication related pages
-- `frontend/src/pages/Profile.jsx`:
-  user profile management
-- `frontend/src/components/KanbanBoard.jsx`:
-  kanban drag-and-drop task board
-- `frontend/src/components/TaskCalendar.jsx`:
-  calendar-based task view
-- `frontend/src/components/ProductivityCharts.jsx`:
-  dashboard analytics charts
-- `frontend/src/components/PomodoroWidget.jsx`:
-  focus timer widget
-- `frontend/src/components/NotificationBell.jsx`:
-  notification UI
+## Environment Variables (`backend/.env`)
 
-## Important Backend Files
+```env
+PORT=5001
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=http://localhost:5173
 
-- `backend/src/index.js`:
-  express server start hota hai yahan se
-- `backend/src/routes/auth.routes.js`:
-  signup, login, password reset, profile APIs
-- `backend/src/routes/task.routes.js`:
-  task CRUD, task status, assignment, comments
-- `backend/src/routes/board.routes.js`:
-  board create, fetch, invite, invitations
-- `backend/src/routes/notification.routes.js`:
-  notifications fetch/read/delete
-- `backend/src/models/`:
-  user, board, task, notification schemas
+# Cloudinary
+CLOUDINARY_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
-## API Modules
-
-Backend me main API areas ye hain:
-
-- `/api/auth`
-- `/api/tasks`
-- `/api/boards`
-- `/api/notifications`
-
-## Installation
-
-### Prerequisites
-- Node.js
-- npm
-- MongoDB database
-- Cloudinary account
-
-### Setup
-
-1. Clone project
-```bash
-git clone <repository-url>
-cd Task-Management-System-2-main
+# Mailer (if configured in your project)
+MAIL_HOST=your_smtp_host
+MAIL_PORT=587
+MAIL_USER=your_email
+MAIL_PASS=your_password
+MAIL_FROM=your_from_email
 ```
 
-2. Root se dependencies install/build karo
+---
+
+## Local Setup
+
+### 1) Install dependencies (root helper script)
+
 ```bash
 npm run build
 ```
 
-3. `backend` folder ke andar `.env` file banao:
-```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-FRONTEND_URL=http://localhost:5173
-NODE_ENV=development
-```
+### 2) Run backend
 
-## Run Project
-
-### Backend
 ```bash
 cd backend
 npm run dev
 ```
 
-### Frontend
+### 3) Run frontend
+
 ```bash
 cd frontend
 npm run dev
 ```
 
-### Production
+### 4) Production start
+
 ```bash
 npm start
 ```
 
-## Deploy On Vercel
+---
 
-Ye project ab single Vercel project ke through deploy ho sakta hai:
-- frontend static build ke form me serve hoga
-- backend `api/index.js` ke through Vercel Function ke form me chalega
+## Scripts Reference
 
-### Required Environment Variables on Vercel
-```env
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-FRONTEND_URL=https://your-project-name.vercel.app
-NODE_ENV=production
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-VITE_USE_HASH_ROUTER=false
-```
+### Root
+- `npm run build` -> installs backend/frontend dependencies and builds frontend
+- `npm start` -> starts backend in production mode
 
-### Vercel Notes
-- same project me frontend aur backend dono deploy honge
-- frontend production me relative `/api/...` routes use karega
-- Vercel config root me `vercel.json` file se manage ho rahi hai
-- reset-password aur deep links ke liye BrowserRouter use hota hai, isliye `VITE_USE_HASH_ROUTER=false` rakha gaya hai
-- backend serverless mode me run karega, isliye uploads ke liye temp files system temp directory me store hoti hain
+### Backend (`backend/package.json`)
+- `npm run dev` -> nodemon dev server
+- `npm run start` -> node production server
 
-## Current Route Flow
+### Frontend (`frontend/package.json`)
+- `npm run dev` -> vite dev server
+- `npm run build` -> vite build
+- `npm run preview` -> preview production build
+- `npm run lint` -> eslint
+- `npm run deploy` -> publish `dist` to GitHub Pages
 
-### Public Routes
+---
+
+## API Surface (High-Level)
+
+- `POST /api/auth/*` -> auth + password + profile APIs
+- `GET/POST/PUT/PATCH/DELETE /api/task/*` -> task CRUD, status, assign, comments, attachments
+- `GET/POST/PATCH /api/board/*` -> board and invitation flows
+- `GET/PUT/DELETE /api/notifications/*` -> notifications lifecycle
+
+---
+
+## Route Access
+
+### Public
 - `/home`
 - `/signup`
 - `/login`
 - `/forgot-password`
 - `/reset-password/:token`
 
-### Protected Routes
-- `/`
+### Protected
 - `/dashboard`
 - `/profile`
 
-## Notes
+---
 
-- `frontend/dist` build output folder hai
-- `node_modules` dependency folders hain, inhe manually edit nahi karna chahiye
-- app ka main working logic `frontend/src` aur `backend/src` me hai
+## UI/UX Notes
 
-## Summary
+- Mobile-responsive layout across major pages
+- Smooth animated sections and interaction feedback
+- Tap bounce and micro-scale effects on key controls
+- Slide transitions for mobile sidebar
+- Scroll-optimized task and modal sections
 
-Ye project ek modern task management website hai jahan user:
-- login/signup kar sakta hai
-- tasks aur boards manage kar sakta hai
-- kanban/calendar/grid views use kar sakta hai
-- comments aur assignment kar sakta hai
-- notifications dekh sakta hai
-- profile aur password manage kar sakta hai
+---
 
-Is README ka purpose ye hai ki project open karte hi samajh aa jaye ki website par kya available hai aur file system me kis folder ka kya role hai.
+## Why This Project Stands Out
+
+- Full-stack architecture with realistic product-level modules
+- Feature depth beyond CRUD (boards, productivity, reminders, notifications)
+- Clean separation of concerns (controllers/services/validators)
+- Scalable path for real-time events, RBAC, and audit enhancements
+
+---
+
+## Live Demo
+
+- **Frontend (GitHub Pages):** [https://mrpar.github.io/Task-Management-System-2-main/](https://mrpar.github.io/Task-Management-System-2-main/)
+- **Backend API (Render):** [https://task-management-system-api.onrender.com/api/health](https://task-management-system-api.onrender.com/api/health)
+
+> Tip: If you deploy frontend on GitHub Pages and backend on Render/Railway, keep both links here for quick verification.
+
+---
+
+## Screenshots / GIF Preview
+
+### Product Walkthrough (GIF)
+
+![TaskFlow Pro Demo](./frontend/public/previews/taskflow-demo.svg)
+
+### Screenshots
+
+![Dashboard](./frontend/public/previews/dashboard-preview.svg)
+![Kanban View](./frontend/public/previews/kanban-preview.svg)
+![Calendar View](./frontend/public/previews/calendar-preview.svg)
+![Profile](./frontend/public/previews/profile-preview.svg)
+
+> Preview placeholder assets are included in `frontend/public/previews/`.  
+> Replace these `.svg` files with your real `.png`/`.gif` captures anytime.
+
+---
+
+## Contributors
+
+Thanks to everyone who contributed to this project.
+
+- **Sanjib** - Core development, architecture, and UI/UX implementation
+
+If you want to contribute:
+
+1. Fork the repository
+2. Create a feature branch (`feature/your-feature-name`)
+3. Commit your changes
+4. Open a Pull Request
+
+---
+
+## License
+
+This project is currently unlicensed for public reuse by default.
+
+If you want to open-source it, add a `LICENSE` file (recommended: MIT) and update this section:
+
+```text
+MIT License
+Copyright (c) 2026 Sanjib
+```
+
+---
+
+## Maintainer
+
+**Sanjib**  
+Built with focus on clean UX, practical workflows, and production-ready structure.

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#0b1220" />
+  <rect x="100" y="110" width="1080" height="500" rx="22" fill="#1e293b" stroke="#334155" />
+  <line x1="100" y1="190" x2="1180" y2="190" stroke="#334155" />
+  <text x="50%" y="52%" fill="#bfdbfe" font-size="52" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700">
+    Calendar Screenshot Placeholder
+  </text>
+</svg>

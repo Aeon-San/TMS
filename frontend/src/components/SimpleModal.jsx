@@ -4,13 +4,13 @@ const SimpleModal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[rgba(15,23,42,0.25)] px-4 py-8 backdrop-blur-md">
-      <div className="relative w-full max-w-md rounded-[28px] border border-white/80 bg-white p-6 text-slate-900 shadow-[0_24px_80px_rgba(15,23,42,0.18)] max-h-[calc(100vh-4rem)] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(22,17,26,0.42)] px-3 py-4 backdrop-blur-md sm:px-4">
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[24px] border border-white/10 bg-[#17131c] p-4 text-white shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:rounded-[28px] sm:p-6">
         <button
           onClick={onClose}
-          className="absolute right-4 top-3 text-2xl text-slate-500 transition hover:text-slate-900"
+          className="absolute right-3 top-2 text-2xl text-white/80 transition hover:text-white sm:right-4 sm:top-3"
         >
-          x
+          ×
         </button>
         {children}
       </div>

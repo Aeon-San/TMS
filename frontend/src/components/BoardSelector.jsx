@@ -46,8 +46,8 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
   };
 
   const shellClass = darkMode
-    ? "rounded-[28px] border border-white/8 bg-white/6 p-4 shadow-sm"
-    : "rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_12px_30px_rgba(15,23,42,0.05)]";
+    ? "rounded-[28px] border border-[#31456e] bg-[#1f2f4f] p-4 shadow-sm"
+    : "rounded-[28px] border border-[#d6e1f6] bg-[linear-gradient(180deg,#f9fbff_0%,#eef4ff_100%)] p-4 shadow-sm";
 
   return (
     <div className={shellClass}>
@@ -55,7 +55,7 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
         <h3 className={darkMode ? "text-lg font-semibold text-white" : "text-lg font-semibold text-slate-900"}>Boards</h3>
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
-        className="btn btn-sm rounded-2xl border-0 bg-[#2563eb] text-white shadow-[0_10px_20px_rgba(37,99,235,0.28)] hover:bg-[#1d4ed8]"
+          className="btn btn-sm rounded-2xl border-0 bg-[#2f66dd] text-white shadow-[0_10px_20px_rgba(47,102,221,0.28)] hover:bg-[#2456c2]"
         >
           <FaPlus className="w-4 h-4" />
         </button>
@@ -68,24 +68,24 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
             placeholder="Board name"
             value={newBoardName}
             onChange={(e) => setNewBoardName(e.target.value)}
-            className={darkMode ? "input input-sm w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-100" : "input input-sm w-full rounded-2xl border border-slate-200 bg-slate-50 text-slate-700"}
+            className={darkMode ? "input input-sm w-full rounded-2xl border border-[#31456e] bg-[#15233f] text-slate-100" : "input input-sm w-full rounded-2xl border border-[#c9d9f6] bg-white text-slate-700"}
             required
           />
           <textarea
             placeholder="Description (optional)"
             value={newBoardDescription}
             onChange={(e) => setNewBoardDescription(e.target.value)}
-            className={darkMode ? "textarea textarea-sm w-full rounded-2xl border border-white/10 bg-[#1d1723] text-slate-100" : "textarea textarea-sm w-full rounded-2xl border border-slate-200 bg-slate-50 text-slate-700"}
+            className={darkMode ? "textarea textarea-sm w-full rounded-2xl border border-[#31456e] bg-[#15233f] text-slate-100" : "textarea textarea-sm w-full rounded-2xl border border-[#c9d9f6] bg-white text-slate-700"}
             rows="2"
           />
           <div className="flex gap-2">
-            <button type="submit" className="btn btn-sm rounded-2xl border-0 bg-[#2563eb] text-white hover:bg-[#1d4ed8]">
+            <button type="submit" className="btn btn-sm rounded-2xl border-0 bg-[#2f66dd] text-white hover:bg-[#2456c2]">
               Create
             </button>
             <button
               type="button"
               onClick={() => setShowCreateForm(false)}
-              className="btn btn-sm rounded-2xl border-0 bg-slate-100 text-slate-700 hover:bg-slate-200"
+              className="btn btn-sm rounded-2xl border-0 bg-[#edf4ff] text-slate-700 hover:bg-[#dfeaff]"
             >
               Cancel
             </button>
@@ -98,17 +98,21 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
           onClick={() => onBoardSelect(null)}
           className={`w-full rounded-2xl border p-3 text-left transition ${
             !selectedBoard
-              ? 'border-blue-200 bg-blue-50 shadow-sm'
-              : 'border-transparent bg-white hover:bg-slate-50'
+              ? darkMode
+                ? 'border-[#6f86b4] bg-[#d3d9e3] shadow-sm'
+                : 'border-[#b9cdf2] bg-[#e8f1ff] shadow-sm'
+              : darkMode
+                ? 'border-[#31456e] bg-[#1a2744] hover:bg-[#223459]'
+                : 'border-transparent bg-white/80 hover:bg-white'
           }`}
         >
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2563eb] text-[11px] font-semibold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2f66dd] text-[11px] font-semibold text-white">
               Home
             </div>
             <div>
-              <div className={darkMode ? "font-medium text-white" : "font-medium text-slate-900"}>Personal Tasks</div>
-              <div className={darkMode ? "text-xs text-slate-400" : "text-xs text-slate-500"}>Your private tasks</div>
+              <div className={darkMode ? "font-medium text-[#3f4f68]" : "font-medium text-slate-900"}>Personal Tasks</div>
+              <div className={darkMode ? "text-xs text-[#7788a3]" : "text-xs text-slate-500"}>Your private tasks</div>
             </div>
           </div>
         </button>
@@ -124,22 +128,26 @@ const BoardSelector = ({ selectedBoard, onBoardSelect, onBoardCreate, darkMode }
               onClick={() => onBoardSelect(board)}
               className={`w-full rounded-2xl border p-3 text-left transition ${
                 selectedBoard?._id === board._id
-                  ? 'border-blue-200 bg-blue-50 shadow-sm'
-                  : 'border-transparent bg-white hover:bg-slate-50'
+                  ? darkMode
+                    ? 'border-[#6f86b4] bg-[#d3d9e3] shadow-sm'
+                    : 'border-[#b9cdf2] bg-[#e8f1ff] shadow-sm'
+                  : darkMode
+                    ? 'border-[#31456e] bg-[#1a2744] hover:bg-[#223459]'
+                    : 'border-transparent bg-white/80 hover:bg-white'
               }`}
             >
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[11px] font-semibold text-[#2563eb]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#c8d8f7] text-[11px] font-semibold text-[#2f66dd]">
                   Board
                 </div>
                 <div className="flex-1">
-                  <div className={darkMode ? "flex items-center gap-1 font-medium text-white" : "flex items-center gap-1 font-medium text-slate-900"}>
+                  <div className={darkMode ? "flex items-center gap-1 font-medium text-[#3f4f68]" : "flex items-center gap-1 font-medium text-slate-900"}>
                     {board.name}
                     {board.owner._id === board.members.find(m => m.role === 'owner')?.user._id && (
                       <FaCrown className="w-3 h-3 text-yellow-500" />
                     )}
                   </div>
-                  <div className={darkMode ? "flex items-center gap-1 text-xs text-slate-400" : "flex items-center gap-1 text-xs text-slate-500"}>
+                  <div className={darkMode ? "flex items-center gap-1 text-xs text-[#7788a3]" : "flex items-center gap-1 text-xs text-slate-500"}>
                     <FaUsers className="w-3 h-3" />
                     {board.members.length} members
                   </div>

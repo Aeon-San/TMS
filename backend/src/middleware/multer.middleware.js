@@ -1,12 +1,10 @@
 import multer from "multer";
 import fs from "fs";
-import os from "os";
 import path from "path";
-
-const tempDir = path.join(os.tmpdir(), "task-management-system");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        const tempDir = "./temp";
         if (!fs.existsSync(tempDir)) {
             fs.mkdirSync(tempDir, { recursive: true });
         }

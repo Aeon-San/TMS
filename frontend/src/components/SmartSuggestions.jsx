@@ -14,8 +14,8 @@ const SmartSuggestions = ({ suggestions, darkMode }) => {
 
       <div className="grid gap-3 md:grid-cols-3">
         {suggestions.map((item) => (
-          <div key={item.title} className={darkMode ? "rounded-2xl border border-white/8 bg-white/6 p-4" : "rounded-2xl border border-slate-200 bg-slate-50 p-4"}>
-            <div className="mb-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+          <div key={item.title} className={darkMode ? "rounded-2xl border border-white/8 bg-white/6 p-4" : "rounded-2xl border border-[#f3d2db] bg-[#fff8fa] p-4"}>
+            <div className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#ff7b86]">
               {item.badge}
             </div>
             <div className={`mb-2 text-lg font-bold ${titleText}`}>{item.title}</div>

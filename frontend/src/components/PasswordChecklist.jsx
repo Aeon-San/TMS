@@ -1,73 +1,42 @@
 const passwordRules = [
-  {
-    key: "length",
-    label: "At least 8 characters",
-    test: (value) => String(value || "").length >= 8,
-  },
-  {
-    key: "upper",
-    label: "One uppercase letter",
-    test: (value) => /[A-Z]/.test(String(value || "")),
-  },
-  {
-    key: "lower",
-    label: "One lowercase letter",
-    test: (value) => /[a-z]/.test(String(value || "")),
-  },
-  {
-    key: "number",
-    label: "One number",
-    test: (value) => /\d/.test(String(value || "")),
-  },
+  { key: "length", label: "At least 8 characters", test: (v) => String(v || "").length >= 8 },
+  { key: "upper",  label: "One uppercase letter",  test: (v) => /[A-Z]/.test(String(v || "")) },
+  { key: "lower",  label: "One lowercase letter",  test: (v) => /[a-z]/.test(String(v || "")) },
+  { key: "number", label: "One number",            test: (v) => /\d/.test(String(v || "")) },
 ];
 
 const PasswordChecklist = ({ password }) => {
-  const results = passwordRules.map((rule) => ({
-    ...rule,
-    passed: rule.test(password),
-  }));
-
-  const passedCount = results.filter((rule) => rule.passed).length;
-  const progress = (passedCount / results.length) * 100;
+  const results     = passwordRules.map((rule) => ({ ...rule, passed: rule.test(password) }));
+  const passedCount = results.filter((r) => r.passed).length;
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h3 className="text-sm font-semibold text-slate-900">Password checklist</h3>
-          <p className="mt-1 text-xs text-slate-500">
-            {passedCount === results.length
-              ? "Looks strong and ready."
-              : `${passedCount}/${results.length} checks passed`}
-          </p>
-        </div>
-        <div className="text-xs font-semibold text-slate-500">
-          {Math.round(progress)}%
+    <div style={{
+      background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.12)",
+      borderRadius: 12, padding: 12,
+    }}>
+      <div style={{ marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--tf-text-muted)" }}>
+          {passedCount === results.length ? "🔒 Strong password" : `Password strength — ${passedCount}/${results.length}`}
         </div>
       </div>
-
-      <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-[#ff7a86] to-[#ff8f7a] transition-all"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      <ul className="mt-4 space-y-2">
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
         {results.map((rule) => (
-          <li key={rule.key} className="flex items-center gap-3 text-sm">
-            <span
-              className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${
-                rule.passed
-                  ? "bg-emerald-100 text-emerald-700"
-                  : "bg-slate-200 text-slate-500"
-              }`}
-            >
-              {rule.passed ? "✓" : "•"}
+          <li key={rule.key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{
+              width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 10, fontWeight: 700,
+              background: rule.passed ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.06)",
+              color: rule.passed ? "#10b981" : "var(--tf-text-subtle)",
+              transition: "all 0.25s",
+            }}>
+              {rule.passed ? "✓" : "·"}
             </span>
-            <span className={rule.passed ? "text-slate-900" : "text-slate-500"}>
-              {rule.label}
-            </span>
+            <span style={{
+              fontSize: 12, fontWeight: 500,
+              color: rule.passed ? "var(--tf-text)" : "var(--tf-text-subtle)",
+              transition: "color 0.25s",
+            }}>{rule.label}</span>
           </li>
         ))}
       </ul>

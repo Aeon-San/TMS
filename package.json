@@ -4,8 +4,6 @@
   "main": "src index.js",
   "scripts": {
     "build": "npm install --prefix backend --legacy-peer-deps && npm install --prefix frontend && npm run build --prefix frontend",
-    "build:frontend": "npm run build --prefix frontend",
-    "deploy:frontend": "npm install --prefix frontend && npm run deploy --prefix frontend",
     "start": "npm run start --prefix backend"
   },
   "keywords": [],

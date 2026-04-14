@@ -18,4 +18,14 @@ export const getTaskComments = (taskId) => {
     return taskApi.get(`/${taskId}/comments`);
 };
 
+export const uploadTaskAttachment = (taskId, file) => {
+    const formData = new FormData();
+    formData.append("attachment", file);
+    return taskApi.post(`/${taskId}/attachments`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+};
+
 export default taskApi;

@@ -4,11 +4,10 @@ dotenv.config();
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from '@fluidjs/multer-cloudinary';
 import multer from 'multer';
-import os from 'os';
 
 const cloudName = process.env.CLOUDINARY_NAME;
 const apiKey = process.env.CLOUDINARY_API_KEY;
-const apiSecret = process.env.CLOUDINARY_SECRET || process.env.CLOUDINARY_API_SECRET;
+const apiSecret = process.env.CLOUDINARY_SECRET;
 
 if (!cloudName || !apiKey || !apiSecret) {
   console.error('Cloudinary configuration missing:');
@@ -283,7 +282,7 @@ export const isCloudinaryConfigured = () => {
   return !!(
     process.env.CLOUDINARY_NAME &&
     process.env.CLOUDINARY_API_KEY &&
-    (process.env.CLOUDINARY_SECRET || process.env.CLOUDINARY_API_SECRET)
+    process.env.CLOUDINARY_SECRET
   );
 };
 
@@ -292,7 +291,7 @@ export const getCloudinaryStatus = () => {
     configured: isCloudinaryConfigured(),
     cloud_name: process.env.CLOUDINARY_NAME ? '***configured***' : 'not set',
     api_key: process.env.CLOUDINARY_API_KEY ? '***configured***' : 'not set',
-    api_secret: (process.env.CLOUDINARY_SECRET || process.env.CLOUDINARY_API_SECRET) ? '***configured***' : 'not set',
+    api_secret: process.env.CLOUDINARY_SECRET ? '***configured***' : 'not set',
   };
 };
 
@@ -590,7 +589,7 @@ export const processPictures = async (picturesInput, options = {}) => {
   };
 };
 
-export const cleanupTempFolder = async (tempDir = `${os.tmpdir()}/task-management-system`) => {
+export const cleanupTempFolder = async (tempDir = './temp') => {
   try {
     const fs = await import('fs');
     const path = await import('path');

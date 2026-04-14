@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import taskApi from "../library/taskApi.js";
+import taskApi, { uploadTaskAttachment } from "../library/taskApi.js";
 import Search from "../components/Search.jsx";
 import TaskCard from "../components/TaskCard.jsx";
 import Modal from "../components/Modal.jsx";
@@ -36,6 +36,7 @@ const Dashboard = () => {
   const [editingTask, setEditingTask] = useState(null);
   const [search, setSearch] = useState("");
   const [loadingTasks, setLoadingTasks] = useState(false);
+  const [uploadingAttachment, setUploadingAttachment] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
     const storedTheme = localStorage.getItem("dashboard-theme");
     return storedTheme ? storedTheme === "dark" : true;
@@ -196,6 +197,33 @@ const Dashboard = () => {
     }
   };
 
+  const handleSelectedTaskAttachmentUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !selectedTask?._id) return;
+
+    try {
+      setUploadingAttachment(true);
+      const response = await uploadTaskAttachment(selectedTask._id, file);
+      const updatedTask = response.data?.task;
+
+      if (updatedTask) {
+        setSelectedTask(updatedTask);
+        setData((prev) => prev.map((task) => (task._id === updatedTask._id ? updatedTask : task)));
+        setEditingTask((prev) => (prev && prev._id === updatedTask._id ? updatedTask : prev));
+      } else {
+        await fetchTasks();
+      }
+
+      toast.success("Attachment uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading attachment:", error);
+      toast.error(error.response?.data?.message || "Unable to upload attachment.");
+    } finally {
+      setUploadingAttachment(false);
+      event.target.value = "";
+    }
+  };
+
   const totalTasks = filteredData.length;
   const completedTasks = filteredData.filter((task) => task.taskStatus === "Completed").length;
   const inProgressTasks = filteredData.filter((task) => task.taskStatus === "In Progress").length;
@@ -349,8 +377,8 @@ const Dashboard = () => {
     ? "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-white/8 bg-white/5 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur"
     : "w-80 min-h-[calc(100vh-3rem)] rounded-[32px] border border-white/60 bg-white/75 p-5 shadow-[0_20px_60px_rgba(163,82,104,0.12)] backdrop-blur";
   const contentClass = darkMode
-    ? "flex-1 rounded-[36px] border border-white/8 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur"
-    : "flex-1 rounded-[36px] border border-white/60 bg-white/70 p-6 shadow-[0_20px_60px_rgba(163,82,104,0.12)] backdrop-blur";
+    ? "flex-1 rounded-[28px] border border-white/8 bg-white/5 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur sm:rounded-[36px] sm:p-6"
+    : "flex-1 rounded-[28px] border border-white/60 bg-white/70 p-4 shadow-[0_20px_60px_rgba(163,82,104,0.12)] backdrop-blur sm:rounded-[36px] sm:p-6";
   const topBarClass = darkMode
     ? "mb-6 flex flex-col gap-4 rounded-[28px] border border-white/8 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-5 shadow-sm xl:flex-row xl:items-center xl:justify-between"
     : "mb-6 flex flex-col gap-4 rounded-[28px] bg-[linear-gradient(135deg,#f7faff_0%,#eaf2ff_100%)] p-5 shadow-sm xl:flex-row xl:items-center xl:justify-between";
@@ -383,9 +411,8 @@ const Dashboard = () => {
   return (
     <div className={shellClass}>
       <div className="mx-auto flex max-w-[1600px] gap-4 px-3 py-4 sm:gap-6 sm:px-4 sm:py-6 lg:px-6">
-        {showMobileSidebar ? (
-          <>
-            <div className={mobilePanelClass}>
+        <>
+            <div className={`${mobilePanelClass} sidebar-slide ${showMobileSidebar ? "sidebar-slide-open" : "sidebar-slide-hidden"}`}>
               <div className="mb-5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.28)]">
@@ -399,7 +426,7 @@ const Dashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowMobileSidebar(false)}
-                  className={darkMode ? "rounded-2xl bg-white/8 p-3 text-slate-100" : "rounded-2xl bg-[#edf4ff] p-3 text-slate-700"}
+                  className={darkMode ? "tap-bounce press-micro rounded-2xl bg-white/8 p-3 text-slate-100" : "tap-bounce press-micro rounded-2xl bg-[#edf4ff] p-3 text-slate-700"}
                 >
                   <FiX />
                 </button>
@@ -467,16 +494,19 @@ const Dashboard = () => {
                     { key: "kanban", label: "Kanban", icon: MdViewKanban },
                     { key: "calendar", label: "Calendar", icon: null },
                   ].map(({ key, label, icon: Icon }) => (
-                    <button key={key} onClick={() => { setViewMode(key); setShowMobileSidebar(false); }} className={`btn btn-sm rounded-2xl border-0 ${viewMode === key ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]" : darkMode ? "bg-white/8 text-slate-200 hover:bg-white/12" : "bg-[#edf4ff] text-slate-700 hover:bg-[#dfeaff]"}`}>
+                    <button key={key} onClick={() => { setViewMode(key); setShowMobileSidebar(false); }} className={`tap-bounce press-micro btn btn-sm rounded-2xl border-0 ${viewMode === key ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]" : darkMode ? "bg-white/8 text-slate-200 hover:bg-white/12" : "bg-[#edf4ff] text-slate-700 hover:bg-[#dfeaff]"}`}>
                       {Icon ? <Icon className="mr-1 h-4 w-4" /> : null}{label}
                     </button>
                   ))}
                 </div>
               </div>
             </div>
-            <button type="button" className="fixed inset-0 z-40 bg-[#120f17]/35 backdrop-blur-[2px]" onClick={() => setShowMobileSidebar(false)} />
+            <button
+              type="button"
+              className={`fixed inset-0 z-40 bg-[#120f17]/35 backdrop-blur-[2px] transition-opacity duration-300 ${showMobileSidebar ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+              onClick={() => setShowMobileSidebar(false)}
+            />
           </>
-        ) : null}
         <aside className={`${sidebarClass} hidden xl:block`}>
           <div className="mb-6 flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.28)]">
@@ -581,7 +611,7 @@ const Dashboard = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`btn btn-sm rounded-2xl border-0 ${
+                className={`tap-bounce press-micro btn btn-sm rounded-2xl border-0 ${
                   viewMode === "grid"
                     ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]"
                     : darkMode
@@ -594,7 +624,7 @@ const Dashboard = () => {
               </button>
               <button
                 onClick={() => setViewMode("kanban")}
-                className={`btn btn-sm rounded-2xl border-0 ${
+                className={`tap-bounce press-micro btn btn-sm rounded-2xl border-0 ${
                   viewMode === "kanban"
                     ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]"
                     : darkMode
@@ -607,7 +637,7 @@ const Dashboard = () => {
               </button>
               <button
                 onClick={() => setViewMode("calendar")}
-                className={`btn btn-sm rounded-2xl border-0 ${
+                className={`tap-bounce press-micro btn btn-sm rounded-2xl border-0 ${
                   viewMode === "calendar"
                     ? "bg-[#2f66dd] text-white shadow-[0_12px_24px_rgba(47,102,221,0.3)]"
                     : darkMode
@@ -622,14 +652,14 @@ const Dashboard = () => {
         </aside>
 
         <main className={`${contentClass} min-w-0 p-4 sm:p-6`}>
-          <div className={topBarClass}>
+          <div className={`${topBarClass} mobile-anim-in`}>
             <div>
-              <p className={`mb-2 text-xs uppercase tracking-[0.28em] ${sidebarTextMuted}`}>Task Management System</p>
+              <p className={`mb-2 text-[11px] uppercase tracking-[0.22em] sm:text-xs sm:tracking-[0.28em] ${sidebarTextMuted}`}>Task Management System</p>
               <div className="mb-3 flex items-center gap-3 xl:hidden">
                 <button
                   type="button"
                   onClick={() => setShowMobileSidebar(true)}
-                  className={darkMode ? "rounded-2xl bg-white/8 p-3 text-slate-100" : "rounded-2xl bg-white p-3 text-slate-700 shadow-sm"}
+                  className={darkMode ? "tap-bounce press-micro rounded-2xl bg-white/8 p-3 text-slate-100" : "tap-bounce press-micro rounded-2xl bg-white p-3 text-slate-700 shadow-sm"}
                 >
                   <FiMenu />
                 </button>
@@ -637,7 +667,7 @@ const Dashboard = () => {
                   {selectedBoard ? "Board View" : "Workspace"}
                 </div>
               </div>
-              <h1 className={`${pageTitleClass} text-2xl sm:text-3xl`}>{selectedBoard ? selectedBoard.name : "Productivity Dashboard"}</h1>
+              <h1 className={`${pageTitleClass} text-xl sm:text-3xl`}>{selectedBoard ? selectedBoard.name : "Productivity Dashboard"}</h1>
               <p className={`mt-2 max-w-2xl ${sidebarTextMuted}`}>
                 {selectedBoard
                   ? selectedBoard.description || "Track work, align your team, and keep deadlines visible in one polished workspace."
@@ -645,11 +675,11 @@ const Dashboard = () => {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
               <button
                 type="button"
                 onClick={() => setDarkMode((prev) => !prev)}
-                className={darkMode ? "btn rounded-2xl border-0 bg-white/8 text-slate-100 hover:bg-white/12" : "btn rounded-2xl border-0 bg-white text-slate-700 hover:bg-[#f4f8ff]"}
+                className={darkMode ? "tap-bounce press-micro btn w-full rounded-2xl border-0 bg-white/8 text-slate-100 hover:bg-white/12 sm:w-auto" : "tap-bounce press-micro btn w-full rounded-2xl border-0 bg-white text-slate-700 hover:bg-[#f4f8ff] sm:w-auto"}
               >
                 {darkMode ? <FiSun className="mr-2" /> : <FiMoon className="mr-2" />}
                 {darkMode ? "Light" : "Dark"} Mode
@@ -658,7 +688,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="mb-6 grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mb-6 grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4 mobile-anim-in mobile-anim-delay-1">
             {analyticsCards.map(({ label, value, subtext, icon: Icon }) => (
               <div key={label} className={analyticsCardClass}>
                 <div className="mb-4 flex items-center justify-between">
@@ -669,7 +699,7 @@ const Dashboard = () => {
                     {label}
                   </span>
                 </div>
-                <div className={darkMode ? "text-3xl font-black text-white" : "text-3xl font-black text-slate-900"}>{value}</div>
+                <div className={darkMode ? "text-2xl font-black text-white sm:text-3xl" : "text-2xl font-black text-slate-900 sm:text-3xl"}>{value}</div>
                 <p className={`mt-2 text-sm ${sidebarTextMuted}`}>{subtext}</p>
                 {label === "Completed" ? (
                   <div className={darkMode ? "mt-4 h-2 rounded-full bg-white/10" : "mt-4 h-2 rounded-full bg-[#dbe7ff]"}>
@@ -680,14 +710,14 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <div className="mb-6 space-y-4">
+          <div className="mb-6 space-y-4 mobile-anim-in mobile-anim-delay-2">
             <ProductivityCharts analytics={productivityAnalytics} darkMode={darkMode} />
             <div className="mx-auto w-full max-w-sm">
               <PomodoroWidget darkMode={darkMode} activeTaskName={selectedTask?.taskName || filteredData[0]?.taskName} />
             </div>
           </div>
 
-          <div className="mb-6">
+          <div className="mb-6 mobile-anim-in mobile-anim-delay-3">
             <SmartSuggestions suggestions={smartSuggestions} darkMode={darkMode} />
           </div>
 
@@ -699,6 +729,11 @@ const Dashboard = () => {
             darkMode={darkMode}
             selectedBoard={selectedBoard}
             totalTasks={totalTasks}
+            onBoardClick={() => setSelectedBoard(null)}
+            onTasksClick={() => {
+              setViewMode("grid");
+              setSearch("");
+            }}
           />
 
           {loadingTasks ? (
@@ -715,47 +750,51 @@ const Dashboard = () => {
                   : "Create your first task to get started"}
               </p>
             </div>
-          ) : viewMode === "grid" ? (
-            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredData.map((task) => (
-                <TaskCard
-                  key={task._id}
-                  task={task}
-                  onUpdate={handleTaskUpdate}
-                  onSelect={setSelectedTask}
-                  onEdit={setEditingTask}
-                  onDelete={handleDeleteTask}
+          ) : (
+            <div className={`task-scroll-area max-h-[68vh] overflow-y-auto pr-0.5 sm:max-h-[72vh] sm:pr-2 ${darkMode ? "task-scroll-dark" : "task-scroll-light"}`}>
+              {viewMode === "grid" ? (
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {filteredData.map((task) => (
+                    <TaskCard
+                      key={task._id}
+                      task={task}
+                      onUpdate={handleTaskUpdate}
+                      onSelect={setSelectedTask}
+                      onEdit={setEditingTask}
+                      onDelete={handleDeleteTask}
+                      darkMode={darkMode}
+                    />
+                  ))}
+                </div>
+              ) : viewMode === "calendar" ? (
+                <TaskCalendar
+                  tasks={filteredData}
+                  onTaskClick={setSelectedTask}
+                  onReschedule={(task, newDate) =>
+                    handleUpdateTask(task._id, { dueDate: newDate.toISOString() })
+                  }
                   darkMode={darkMode}
                 />
-              ))}
+              ) : (
+                <KanbanBoard
+                  tasks={filteredData}
+                  onEdit={setEditingTask}
+                  onDelete={handleDeleteTask}
+                  onStatusChange={(task) => handleUpdateTask(task._id, { taskStatus: task.taskStatus })}
+                  darkMode={darkMode}
+                />
+              )}
             </div>
-          ) : viewMode === "calendar" ? (
-            <TaskCalendar
-              tasks={filteredData}
-              onTaskClick={setSelectedTask}
-              onReschedule={(task, newDate) =>
-                handleUpdateTask(task._id, { dueDate: newDate.toISOString() })
-              }
-              darkMode={darkMode}
-            />
-          ) : (
-            <KanbanBoard
-              tasks={filteredData}
-              onEdit={setEditingTask}
-              onDelete={handleDeleteTask}
-              onStatusChange={(task) => handleUpdateTask(task._id, { taskStatus: task.taskStatus })}
-              darkMode={darkMode}
-            />
           )}
         </main>
       </div>
 
       {selectedTask ? (
         <SimpleModal isOpen={!!selectedTask} onClose={() => setSelectedTask(null)}>
-          <div className="w-full max-w-2xl px-1">
+          <div className="w-full max-w-2xl px-0.5 sm:px-1">
             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-white">{selectedTask.taskName}</h2>
+                <h2 className="text-xl font-bold text-white sm:text-2xl">{selectedTask.taskName}</h2>
                 <p className="mt-1 text-sm text-slate-400">
                   {selectedTask.dueDate ? `Deadline: ${new Date(selectedTask.dueDate).toLocaleString()}` : "No deadline set"}
                 </p>
@@ -839,6 +878,43 @@ const Dashboard = () => {
                 onAssignmentChange={fetchTasks}
                 darkMode={darkMode}
               />
+
+              <div>
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-sm font-semibold text-gray-300">Attachments</h3>
+                  <label className="cursor-pointer rounded-xl bg-[#2f66dd] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#2456c2]">
+                    {uploadingAttachment ? "Uploading..." : "Upload image"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleSelectedTaskAttachmentUpload}
+                      disabled={uploadingAttachment}
+                    />
+                  </label>
+                </div>
+
+                {Array.isArray(selectedTask.attachments) && selectedTask.attachments.length > 0 ? (
+                  <div className="max-h-40 space-y-2 overflow-y-auto rounded-2xl border border-white/8 bg-white/5 p-3">
+                    {selectedTask.attachments.map((attachment, index) => (
+                      <a
+                        key={attachment._id || `${attachment.url}-${index}`}
+                        href={attachment.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block truncate rounded-lg bg-white/8 px-3 py-2 text-sm text-slate-200 hover:bg-white/12"
+                        title={attachment.fileName || "attachment"}
+                      >
+                        {attachment.fileName || attachment.url}
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-white/8 bg-white/5 p-3 text-sm text-slate-400">
+                    No attachments uploaded yet.
+                  </div>
+                )}
+              </div>
 
               <CommentSection
                 taskId={selectedTask._id}

@@ -42,7 +42,10 @@ const apiCors = cors({
     if (!origin || allowedOrigins.has(origin)) {
       return callback(null, true);
     }
-    return callback(new Error('CORS origin not allowed'));
+
+    const corsError = new Error('CORS origin not allowed');
+    corsError.statusCode = 403;
+    return callback(corsError);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],

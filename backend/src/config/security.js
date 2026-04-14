@@ -12,8 +12,13 @@ export const COOKIE_OPTIONS = {
   maxAge: SESSION_TIMEOUT_MS,
 };
 
+const vercelFrontendUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : undefined;
+
 export const CORS_ORIGINS = [
   process.env.FRONTEND_URL,
+  vercelFrontendUrl,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
 ].filter(Boolean);

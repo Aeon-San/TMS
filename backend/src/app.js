@@ -1,4 +1,8 @@
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+
+const envPath = new URL("../../.env", import.meta.url);
+dotenv.config({ path: fileURLToPath(envPath) });
 dotenv.config();
 
 import express from "express";
@@ -7,7 +11,6 @@ import cookieParser from "cookie-parser";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { fileURLToPath } from "url";
 import conncetDB from "./database/connction.js";
 import authRoutes from "./routes/auth.routes.js";
 import taskRouter from "./routes/task.routes.js";

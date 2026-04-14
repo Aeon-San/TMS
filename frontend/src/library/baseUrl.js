@@ -1,6 +1,7 @@
 const trimTrailingSlash = (value = "") => value.replace(/\/+$/, "");
 
 const apiBaseUrl = trimTrailingSlash(import.meta.env.VITE_API_BASE_URL || "");
+const apiPort = import.meta.env.VITE_API_PORT || "5001";
 
 export const createApiBase = (path) => {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -10,7 +11,7 @@ export const createApiBase = (path) => {
   }
 
   return import.meta.env.MODE === "development"
-    ? `http://localhost:9000${normalizedPath}`
+    ? `http://localhost:${apiPort}${normalizedPath}`
     : normalizedPath;
 };
 

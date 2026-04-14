@@ -1,4 +1,8 @@
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+
+const envPath = new URL('../../.env', import.meta.url);
+dotenv.config({ path: fileURLToPath(envPath) });
 dotenv.config();
 import express from 'express';
 import cors from 'cors';
@@ -18,7 +22,11 @@ import { logger } from './library/logger.js';
 
 const app = express();
 const PORT = process.env.PORT || 9000;
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const repoRoot = path.resolve(__dirname, '../..');
+const frontendDist = path.join(repoRoot, 'frontend', 'dist');
+const hasFrontendDist = fs.existsSync(frontendDist);
 const allowedOrigins = new Set([
   ...CORS_ORIGINS,
   `http://localhost:${PORT}`,
@@ -57,13 +65,23 @@ app.use('/api/auth', authRoutes);
 app.use('/api/task', taskRouter);
 app.use('/api/board', boardRoutes);
 app.use('/api/notifications', notificationRoutes);
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+if (hasFrontendDist) {
+  app.use(express.static(frontendDist));
+}
 
 app.get("*", (req, res) => {
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ message: 'API endpoint not found' });
   }
-  res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+
+  if (hasFrontendDist) {
+    return res.sendFile(path.join(frontendDist, 'index.html'));
+  }
+
+  return res.status(503).json({
+    message: 'Frontend build not found. Run frontend dev server or build frontend/dist.',
+  });
 });
 
 app.use(notFoundHandler);

@@ -4,6 +4,14 @@ import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
+const resolveAuthErrorMessage = (error, fallbackMessage) => {
+    if (!error.response) {
+        return "Unable to reach server. Please check if backend is running.";
+    }
+
+    return error.response?.data?.message || fallbackMessage;
+};
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -41,8 +49,9 @@ export const AuthProvider = ({ children }) => {
         await refreshUser();
         toast.success("Signup successful! Welcome");
         } catch (error) {
-        toast.error(error.response?.data?.message || "Signup failed!");
-        throw new Error("Invalid Credentials");
+        const message = resolveAuthErrorMessage(error, "Signup failed!");
+        toast.error(message);
+        throw new Error(message);
         }
 
     }, [refreshUser]);
@@ -54,8 +63,9 @@ export const AuthProvider = ({ children }) => {
   
             toast.success("Login successful!");
         } catch (error) {
-            toast.error(error.response?.data?.message || "Invalid credentials!!!");
-            throw new Error("Invalid Credentials");
+            const message = resolveAuthErrorMessage(error, "Invalid credentials!!!");
+            toast.error(message);
+            throw new Error(message);
         }
     }, [refreshUser]);
 

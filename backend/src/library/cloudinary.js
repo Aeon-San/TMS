@@ -1,4 +1,8 @@
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+
+const envPath = new URL('../../../.env', import.meta.url);
+dotenv.config({ path: fileURLToPath(envPath) });
 dotenv.config();
 
 import { v2 as cloudinary } from 'cloudinary';
